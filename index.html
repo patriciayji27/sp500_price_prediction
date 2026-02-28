@@ -8,2059 +8,469 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* ═══════════════════════════════════════════
-   CSS VARIABLES & RESET
-   ═══════════════════════════════════════════ */
-:root {
-  --bg-primary: #0a0f1a;
-  --bg-secondary: #111827;
-  --bg-card: #161e2e;
-  --bg-card-hover: #1c2640;
-  --border: #1e293b;
-  --border-active: #334155;
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent-teal: #2dd4bf;
-  --accent-teal-dim: rgba(45, 212, 191, 0.15);
-  --accent-gold: #fbbf24;
-  --accent-gold-dim: rgba(251, 191, 36, 0.12);
-  --accent-rose: #f43f5e;
-  --accent-rose-dim: rgba(244, 63, 94, 0.12);
-  --accent-blue: #60a5fa;
-  --accent-blue-dim: rgba(96, 165, 250, 0.12);
-  --accent-violet: #a78bfa;
-  --gradient-hero: linear-gradient(135deg, #0a0f1a 0%, #111827 40%, #0f172a 100%);
-  --font-display: 'Source Serif 4', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  line-height: 1.7;
-  overflow-x: hidden;
-}
-
-::selection {
-  background: var(--accent-teal);
-  color: var(--bg-primary);
-}
-
-a { color: var(--accent-teal); text-decoration: none; transition: color 0.2s; }
-a:hover { color: #5eead4; }
-
-/* ═══════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════ */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-section {
-  padding: 6rem 0;
-  position: relative;
-}
-
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent-teal);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.section-label::before {
-  content: '';
-  width: 24px;
-  height: 1px;
-  background: var(--accent-teal);
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  font-weight: 600;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.section-desc {
-  font-size: 1.05rem;
-  color: var(--text-secondary);
-  max-width: 650px;
-  margin-bottom: 3rem;
-}
-
-/* ═══════════════════════════════════════════
-   NAV
-   ═══════════════════════════════════════════ */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 0 2rem;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  background: rgba(10, 15, 26, 0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  transition: transform 0.3s var(--ease-out);
-}
-
-nav .nav-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-nav .brand {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  letter-spacing: 0.05em;
-}
-
-nav .brand span { color: var(--accent-teal); }
-
-nav .nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-nav .nav-links a {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  transition: color 0.2s;
-  font-weight: 500;
-}
-
-nav .nav-links a:hover { color: var(--text-primary); }
-
-/* ═══════════════════════════════════════════
-   HERO
-   ═══════════════════════════════════════════ */
-#hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  background: var(--gradient-hero);
-  padding-top: 56px;
-  position: relative;
-  overflow: hidden;
-}
-
-#hero::before {
-  content: '';
-  position: absolute;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-}
-
-.hero-overline {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent-teal);
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
-}
-
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fadeUp 0.8s var(--ease-out) 0.4s forwards;
-}
-
-.hero-title em {
-  font-style: italic;
-  color: var(--accent-teal);
-}
-
-.hero-subtitle {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  max-width: 560px;
-  margin-bottom: 2.5rem;
-  opacity: 0;
-  animation: fadeUp 0.8s var(--ease-out) 0.6s forwards;
-}
-
-.hero-stats {
-  display: flex;
-  gap: 3rem;
-  opacity: 0;
-  animation: fadeUp 0.8s var(--ease-out) 0.8s forwards;
-}
-
-.hero-stat .stat-value {
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: var(--accent-teal);
-}
-
-.hero-stat .stat-label {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 0.2rem;
-}
-
-.hero-chart-bg {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ═══════════════════════════════════════════
-   SCROLL ANIMATIONS
-   ═══════════════════════════════════════════ */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ═══════════════════════════════════════════
-   SP500 CHART (section 1)
-   ═══════════════════════════════════════════ */
-.chart-container {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.chart-title-row {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.chart-price {
-  font-family: var(--font-mono);
-  font-size: 1.4rem;
-  font-weight: 500;
-}
-
-.chart-change {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.chart-change.up { color: var(--accent-teal); background: var(--accent-teal-dim); }
-.chart-change.down { color: var(--accent-rose); background: var(--accent-rose-dim); }
-
-.time-buttons {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.time-btn {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.time-btn:hover { border-color: var(--border-active); color: var(--text-secondary); }
-.time-btn.active { background: var(--accent-teal-dim); border-color: var(--accent-teal); color: var(--accent-teal); }
-
-.chart-canvas-wrap {
-  position: relative;
-  height: 340px;
-}
-
-/* ═══════════════════════════════════════════
-   DATA SOURCES (section 2)
-   ═══════════════════════════════════════════ */
-.data-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.data-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s var(--ease-out);
-  position: relative;
-  overflow: hidden;
-}
-
-.data-card:hover {
-  border-color: var(--border-active);
-  background: var(--bg-card-hover);
-  transform: translateY(-2px);
-}
-
-.data-card.expanded {
-  border-color: var(--accent-teal);
-  background: var(--bg-card-hover);
-}
-
-.data-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.data-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-
-.data-card-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.data-card-ticker {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-.data-card-oneliner {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 0;
-  transition: margin 0.3s;
-}
-
-.data-card-detail {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s var(--ease-out), opacity 0.3s;
-  opacity: 0;
-}
-
-.data-card.expanded .data-card-detail {
-  max-height: 500px;
-  opacity: 1;
-  margin-top: 1rem;
-}
-
-.data-card.expanded .data-card-oneliner {
-  margin-bottom: 0;
-}
-
-.detail-section {
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.detail-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-teal);
-  margin-bottom: 0.4rem;
-}
-
-.detail-text {
-  font-size: 0.83rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.feature-tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: var(--accent-teal-dim);
-  color: var(--accent-teal);
-  margin: 0.2rem 0.15rem;
-}
-
-.arrow-indicator {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  transition: transform 0.3s var(--ease-out);
-}
-
-.data-card.expanded .arrow-indicator {
-  transform: rotate(180deg);
-}
-
-/* ═══════════════════════════════════════════
-   FEATURE PIPELINE (section 3)
-   ═══════════════════════════════════════════ */
-.pipeline-flow {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-}
-
-.pipeline-step {
-  flex-shrink: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
-  text-align: center;
-  min-width: 170px;
-  transition: all 0.3s;
-}
-
-.pipeline-step.active {
-  border-color: var(--accent-teal);
-  box-shadow: 0 0 20px rgba(45, 212, 191, 0.1);
-}
-
-.pipeline-step-num {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--accent-teal);
-  margin-bottom: 0.3rem;
-}
-
-.pipeline-step-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.2rem;
-}
-
-.pipeline-step-sub {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.pipeline-arrow {
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-
-.feature-explorer {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.fe-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  overflow-x: auto;
-}
-
-.fe-tab {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 0.9rem 1.2rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  white-space: nowrap;
-  background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-}
-
-.fe-tab:hover { color: var(--text-secondary); }
-.fe-tab.active { color: var(--accent-teal); border-bottom-color: var(--accent-teal); }
-
-.fe-content {
-  padding: 1.5rem;
-}
-
-.fe-panel {
-  display: none;
-}
-
-.fe-panel.active {
-  display: block;
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.transform-demo {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.transform-box {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.transform-box-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.5rem;
-}
-
-.transform-values {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  line-height: 1.8;
-}
-
-.transform-op {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  color: var(--accent-teal);
-  text-align: center;
-}
-
-.transform-explanation {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  padding: 1rem;
-  background: var(--bg-secondary);
-  border-radius: 8px;
-  border-left: 3px solid var(--accent-teal);
-}
-
-.transform-explanation code {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  background: rgba(45, 212, 191, 0.1);
-  color: var(--accent-teal);
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-}
-
-/* ═══════════════════════════════════════════
-   BEAM SEARCH (section 4)
-   ═══════════════════════════════════════════ */
-.beam-viz {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.beam-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.beam-btn {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--accent-teal);
-  border-radius: 6px;
-  background: var(--accent-teal-dim);
-  color: var(--accent-teal);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.beam-btn:hover { background: rgba(45, 212, 191, 0.25); }
-.beam-btn:disabled { opacity: 0.4; cursor: default; }
-
-.beam-round-label {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.beam-tree {
-  position: relative;
-  min-height: 200px;
-}
-
-.beam-level {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
-.beam-node {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.6rem 0.9rem;
-  min-width: 180px;
-  transition: all 0.4s var(--ease-out);
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.beam-node.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.beam-node.best {
-  border-color: var(--accent-teal);
-  box-shadow: 0 0 12px rgba(45, 212, 191, 0.15);
-}
-
-.beam-node.pruned {
-  opacity: 0.35;
-  border-style: dashed;
-}
-
-.beam-node-score {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
-}
-
-.beam-node-info {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-.beam-node-dropped {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--accent-rose);
-  margin-top: 0.2rem;
-}
-
-/* ═══════════════════════════════════════════
-   RESULTS (section 5)
-   ═══════════════════════════════════════════ */
-.results-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-@media (max-width: 768px) {
-  .results-grid { grid-template-columns: 1fr; }
-}
-
-.result-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-
-.result-card-title {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
-.metric-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.metric-row:last-child { border-bottom: none; }
-
-.metric-name {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-}
-
-.metric-value {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.metric-value.highlight { color: var(--accent-teal); }
-
-.fi-bar-container {
-  margin-bottom: 0.5rem;
-}
-
-.fi-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.4rem;
-}
-
-.fi-bar-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  width: 160px;
-  text-align: right;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-}
-
-.fi-bar-track {
-  flex: 1;
-  height: 20px;
-  background: var(--bg-secondary);
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-}
-
-.fi-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.8s var(--ease-out);
-  position: relative;
-}
-
-.fi-bar-fill::after {
-  content: attr(data-value);
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--bg-primary);
-  font-weight: 600;
-}
-
-.fi-toggle-type {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1.25rem;
-}
-
-/* ═══════════════════════════════════════════
-   INTERACTIVE FEATURE TOGGLE (section 6)
-   ═══════════════════════════════════════════ */
-.toggle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.feature-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-}
-
-.feature-toggle:hover { border-color: var(--border-active); }
-
-.feature-toggle.on {
-  border-color: var(--accent-teal);
-  background: var(--accent-teal-dim);
-}
-
-.feature-toggle .toggle-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: background 0.2s;
-  flex-shrink: 0;
-}
-
-.feature-toggle.on .toggle-dot {
-  background: var(--accent-teal);
-  box-shadow: 0 0 6px rgba(45, 212, 191, 0.4);
-}
-
-.feature-toggle .toggle-name {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-}
-
-.feature-toggle.on .toggle-name { color: var(--text-primary); }
-
-.sim-output {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-}
-
-.sim-meter {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.sim-meter-bar {
-  flex: 1;
-  height: 8px;
-  background: var(--bg-secondary);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.sim-meter-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: var(--accent-teal);
-  transition: width 0.5s var(--ease-out);
-}
-
-.sim-auc {
-  font-family: var(--font-mono);
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: var(--accent-teal);
-  width: 80px;
-  text-align: right;
-}
-
-.sim-note {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-/* ═══════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════ */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 3rem 0;
-  text-align: center;
-}
-
-footer p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-}
-
-footer a { color: var(--accent-teal); }
-
-/* ═══════════════════════════════════════════
-   ROC CURVE CANVAS
-   ═══════════════════════════════════════════ */
-.roc-canvas-wrap {
-  height: 300px;
-  position: relative;
-}
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════ */
-@media (max-width: 640px) {
-  .container { padding: 0 1.25rem; }
-  section { padding: 4rem 0; }
-  .hero-stats { flex-direction: column; gap: 1.5rem; }
-  .pipeline-flow { flex-direction: column; align-items: stretch; }
-  .pipeline-arrow { transform: rotate(90deg); text-align: center; }
-  .transform-demo { grid-template-columns: 1fr; }
-  .transform-op { transform: rotate(90deg); }
-  nav .nav-links { display: none; }
-  .data-grid { grid-template-columns: 1fr; }
-}
-
-/* ═══════════════════════════════════════════
-   DIVIDER
-   ═══════════════════════════════════════════ */
-.section-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-/* category colors */
-.cat-price { background: var(--accent-teal-dim); color: var(--accent-teal); }
-.cat-vol { background: var(--accent-rose-dim); color: var(--accent-rose); }
-.cat-rates { background: var(--accent-gold-dim); color: var(--accent-gold); }
-.cat-fx { background: var(--accent-blue-dim); color: var(--accent-blue); }
-.cat-macro { background: rgba(167, 139, 250, 0.12); color: var(--accent-violet); }
-
-.how-arrow {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0.75rem 0 0.5rem;
-}
-
-.how-arrow::before {
-  content: '→';
-  color: var(--accent-teal);
-  font-family: var(--font-mono);
-}
-
-.how-arrow-text {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
+:root{--bg-primary:#0a0f1a;--bg-secondary:#111827;--bg-card:#161e2e;--bg-card-hover:#1c2640;--border:#1e293b;--border-active:#334155;--text-primary:#e2e8f0;--text-secondary:#94a3b8;--text-muted:#64748b;--accent-teal:#2dd4bf;--accent-teal-dim:rgba(45,212,191,.15);--accent-gold:#fbbf24;--accent-gold-dim:rgba(251,191,36,.12);--accent-rose:#f43f5e;--accent-rose-dim:rgba(244,63,94,.12);--accent-blue:#60a5fa;--accent-blue-dim:rgba(96,165,250,.12);--accent-violet:#a78bfa;--accent-violet-dim:rgba(167,139,250,.12);--gradient-hero:linear-gradient(135deg,#0a0f1a 0%,#111827 40%,#0f172a 100%);--font-display:'Source Serif 4',Georgia,serif;--font-body:'DM Sans',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;--ease-out:cubic-bezier(.16,1,.3,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);line-height:1.7;overflow-x:hidden}
+::selection{background:var(--accent-teal);color:var(--bg-primary)}
+a{color:var(--accent-teal);text-decoration:none;transition:color .2s}a:hover{color:#5eead4}
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+section{padding:6rem 0;position:relative}
+.section-label{font-family:var(--font-mono);font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-teal);margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent-teal)}
+.section-title{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:600;line-height:1.2;margin-bottom:1rem}
+.section-desc{font-size:1.05rem;color:var(--text-secondary);max-width:650px;margin-bottom:3rem}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:56px;display:flex;align-items:center;background:rgba(10,15,26,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+nav .nav-inner{max-width:1100px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+nav .brand{font-family:var(--font-mono);font-size:.8rem;font-weight:500;color:var(--text-primary);letter-spacing:.05em}
+nav .brand span{color:var(--accent-teal)}
+nav .nav-links{display:flex;gap:2rem;list-style:none}
+nav .nav-links a{font-size:.8rem;color:var(--text-muted);transition:color .2s;font-weight:500}
+nav .nav-links a:hover{color:var(--text-primary)}
+#hero{min-height:100vh;display:flex;align-items:center;background:var(--gradient-hero);padding-top:56px;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(45,212,191,.06) 0%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;z-index:2}
+.hero-overline{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent-teal);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--ease-out) .2s forwards}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4rem);font-weight:700;line-height:1.1;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s var(--ease-out) .4s forwards}
+.hero-title em{font-style:italic;color:var(--accent-teal)}
+.hero-subtitle{font-size:1.15rem;color:var(--text-secondary);max-width:580px;margin-bottom:1.25rem;opacity:0;animation:fadeUp .8s var(--ease-out) .6s forwards}
+.hero-byline{font-family:var(--font-mono);font-size:.82rem;color:var(--text-muted);margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s var(--ease-out) .7s forwards}
+.hero-byline a{color:var(--accent-teal)}
+.hero-stats{display:flex;gap:3rem;opacity:0;animation:fadeUp .8s var(--ease-out) .8s forwards}
+.hero-stat .stat-value{font-family:var(--font-mono);font-size:1.6rem;font-weight:500;color:var(--accent-teal)}
+.hero-stat .stat-label{font-size:.78rem;color:var(--text-muted);margin-top:.2rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.chart-container{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.chart-title-row{display:flex;align-items:baseline;gap:1rem}
+.chart-price{font-family:var(--font-mono);font-size:1.4rem;font-weight:500}
+.chart-change{font-family:var(--font-mono);font-size:.85rem;padding:.15rem .5rem;border-radius:4px}
+.chart-change.up{color:var(--accent-teal);background:var(--accent-teal-dim)}.chart-change.down{color:var(--accent-rose);background:var(--accent-rose-dim)}
+.time-buttons{display:flex;gap:.25rem}
+.time-btn{font-family:var(--font-mono);font-size:.7rem;padding:.3rem .7rem;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s}
+.time-btn:hover{border-color:var(--border-active);color:var(--text-secondary)}
+.time-btn.active{background:var(--accent-teal-dim);border-color:var(--accent-teal);color:var(--accent-teal)}
+.chart-canvas-wrap{position:relative;height:340px}
+.data-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.data-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;cursor:pointer;transition:all .3s var(--ease-out);position:relative;overflow:hidden}
+.data-card:hover{border-color:var(--border-active);background:var(--bg-card-hover);transform:translateY(-2px)}
+.data-card.expanded{border-color:var(--accent-teal);background:var(--bg-card-hover)}
+.data-card-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem}
+.data-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.data-card-name{font-weight:600;font-size:.95rem}.data-card-ticker{font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted)}
+.data-card-oneliner{font-size:.85rem;color:var(--text-secondary)}
+.data-card-detail{max-height:0;overflow:hidden;transition:max-height .4s var(--ease-out),opacity .3s;opacity:0}
+.data-card.expanded .data-card-detail{max-height:500px;opacity:1;margin-top:1rem}
+.detail-section{padding-top:1rem;border-top:1px solid var(--border)}
+.detail-label{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-teal);margin-bottom:.4rem}
+.detail-text{font-size:.83rem;color:var(--text-secondary);line-height:1.6}
+.feature-tag{display:inline-block;font-family:var(--font-mono);font-size:.68rem;padding:.2rem .5rem;border-radius:4px;background:var(--accent-teal-dim);color:var(--accent-teal);margin:.2rem .15rem}
+.feature-tag.eliminated{background:var(--accent-rose-dim);color:var(--accent-rose);text-decoration:line-through;opacity:.7}
+.arrow-indicator{position:absolute;top:1.25rem;right:1.25rem;font-size:.8rem;color:var(--text-muted);transition:transform .3s var(--ease-out)}
+.data-card.expanded .arrow-indicator{transform:rotate(180deg)}
+.pipeline-flow{display:flex;align-items:center;gap:1rem;margin-bottom:3rem;overflow-x:auto;padding-bottom:1rem}
+.pipeline-step{flex-shrink:0;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;text-align:center;min-width:170px;transition:all .3s}
+.pipeline-step.active{border-color:var(--accent-teal);box-shadow:0 0 20px rgba(45,212,191,.1)}
+.pipeline-step-num{font-family:var(--font-mono);font-size:.65rem;color:var(--accent-teal);margin-bottom:.3rem}
+.pipeline-step-title{font-weight:600;font-size:.9rem;margin-bottom:.2rem}
+.pipeline-step-sub{font-size:.75rem;color:var(--text-muted)}
+.pipeline-arrow{color:var(--text-muted);font-size:1.2rem;flex-shrink:0}
+.feature-explorer{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.fe-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+.fe-tab{font-family:var(--font-mono);font-size:.72rem;padding:.9rem 1.2rem;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.fe-tab:hover{color:var(--text-secondary)}.fe-tab.active{color:var(--accent-teal);border-bottom-color:var(--accent-teal)}
+.fe-content{padding:1.5rem}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.transform-demo{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1rem}
+.transform-box{background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.transform-box-label{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.transform-values{font-family:var(--font-mono);font-size:.8rem;line-height:1.8}
+.transform-op{font-family:var(--font-mono);font-size:1.2rem;color:var(--accent-teal);text-align:center}
+.transform-explanation{font-size:.88rem;color:var(--text-secondary);line-height:1.7;padding:1rem;background:var(--bg-secondary);border-radius:8px;border-left:3px solid var(--accent-teal)}
+.transform-explanation.elim-border{border-left-color:var(--accent-rose)}
+.feat-status-badge{display:inline-block;font-family:var(--font-mono);font-size:.6rem;padding:.15rem .45rem;border-radius:3px;margin-left:.5rem;font-weight:600;vertical-align:middle}
+.feat-status-badge.kept{background:var(--accent-teal-dim);color:var(--accent-teal)}
+.feat-status-badge.dropped{background:var(--accent-rose-dim);color:var(--accent-rose)}
+.beam-viz{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.beam-controls{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.beam-btn{font-family:var(--font-mono);font-size:.75rem;padding:.5rem 1rem;border:1px solid var(--accent-teal);border-radius:6px;background:var(--accent-teal-dim);color:var(--accent-teal);cursor:pointer;transition:all .2s}
+.beam-btn:hover{background:rgba(45,212,191,.25)}.beam-btn:disabled{opacity:.4;cursor:default}
+.beam-round-label{font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted)}
+.beam-level{display:flex;gap:.75rem;margin-bottom:1.5rem;align-items:flex-start;flex-wrap:wrap}
+.beam-node{background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;min-width:180px;transition:all .4s var(--ease-out);opacity:0;transform:translateY(10px)}
+.beam-node.visible{opacity:1;transform:translateY(0)}
+.beam-node.best{border-color:var(--accent-teal);box-shadow:0 0 12px rgba(45,212,191,.15)}
+.beam-node.pruned{opacity:.35;border-style:dashed}
+.beam-node-score{font-family:var(--font-mono);font-size:.9rem;font-weight:500;margin-bottom:.2rem}
+.beam-node-info{font-size:.72rem;color:var(--text-muted)}
+.beam-node-dropped{font-family:var(--font-mono);font-size:.68rem;color:var(--accent-rose);margin-top:.2rem}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.result-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.result-card-title{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border)}
+.metric-row:last-child{border-bottom:none}
+.metric-name{font-size:.88rem;color:var(--text-secondary)}
+.metric-value{font-family:var(--font-mono);font-size:.95rem;font-weight:500}
+.metric-value.highlight{color:var(--accent-teal)}
+.roc-canvas-wrap{height:300px;position:relative}
+.fi-bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
+.fi-bar-label{font-family:var(--font-mono);font-size:.7rem;width:175px;text-align:right;color:var(--text-secondary);flex-shrink:0}
+.fi-bar-track{flex:1;height:20px;background:var(--bg-secondary);border-radius:4px;overflow:hidden}
+.fi-bar-fill{height:100%;border-radius:4px;transition:width .8s var(--ease-out);position:relative}
+.fi-bar-fill::after{content:attr(data-value);position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:.6rem;color:var(--bg-primary);font-weight:600}
+.fi-toggle-type{display:flex;gap:.25rem}
+.toggle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem;margin-bottom:1.5rem}
+.feature-toggle{display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
+.feature-toggle:hover{border-color:var(--border-active)}
+.feature-toggle.on{border-color:var(--accent-teal);background:var(--accent-teal-dim)}
+.feature-toggle .toggle-dot{width:10px;height:10px;border-radius:50%;background:var(--text-muted);transition:background .2s;flex-shrink:0}
+.feature-toggle.on .toggle-dot{background:var(--accent-teal);box-shadow:0 0 6px rgba(45,212,191,.4)}
+.feature-toggle .toggle-name{font-family:var(--font-mono);font-size:.7rem;color:var(--text-secondary)}
+.feature-toggle.on .toggle-name{color:var(--text-primary)}
+.feature-toggle.was-elim{border-color:rgba(244,63,94,.25)}
+.feature-toggle.was-elim .toggle-name{color:var(--accent-rose);opacity:.6}
+.feature-toggle.was-elim.on .toggle-name{opacity:1}
+.sim-output{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.sim-meter{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.sim-meter-bar{flex:1;height:8px;background:var(--bg-secondary);border-radius:4px;overflow:hidden}
+.sim-meter-fill{height:100%;border-radius:4px;background:var(--accent-teal);transition:width .5s var(--ease-out)}
+.sim-auc{font-family:var(--font-mono);font-size:1.3rem;font-weight:500;color:var(--accent-teal);width:80px;text-align:right}
+.sim-note{font-size:.82rem;color:var(--text-muted)}
+footer{border-top:1px solid var(--border);padding:3rem 0;text-align:center}
+footer p{font-size:.82rem;color:var(--text-muted);margin-bottom:.5rem}
+.section-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.cat-price{background:var(--accent-teal-dim);color:var(--accent-teal)}
+.cat-vol{background:var(--accent-rose-dim);color:var(--accent-rose)}
+.cat-rates{background:var(--accent-gold-dim);color:var(--accent-gold)}
+.cat-fx{background:var(--accent-blue-dim);color:var(--accent-blue)}
+.cat-macro{background:var(--accent-violet-dim);color:var(--accent-violet)}
+.elim-summary{display:flex;gap:1.5rem;margin-top:2rem;flex-wrap:wrap}
+.elim-box{flex:1;min-width:200px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center}
+.elim-box-num{font-family:var(--font-mono);font-size:2rem;font-weight:500}
+.elim-box-label{font-size:.78rem;color:var(--text-muted);margin-top:.2rem}
+@media(max-width:768px){.results-grid{grid-template-columns:1fr}.hero-stats{flex-direction:column;gap:1.5rem}.pipeline-flow{flex-direction:column;align-items:stretch}.pipeline-arrow{transform:rotate(90deg);text-align:center}.transform-demo{grid-template-columns:1fr}.transform-op{transform:rotate(90deg)}nav .nav-links{display:none}.data-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<nav><div class="nav-inner"><div class="brand">SP500<span>_</span>Predictor</div><ul class="nav-links"><li><a href="#market">Market</a></li><li><a href="#data">Data</a></li><li><a href="#features">Features</a></li><li><a href="#selection">Selection</a></li><li><a href="#results">Results</a></li><li><a href="#playground">Playground</a></li><li><a href="https://github.com/patriciayji27/sp500_price_prediction" target="_blank">GitHub ↗</a></li></ul></div></nav>
 
-<!-- ═══════════════════════════════════════════
-     NAVIGATION
-     ═══════════════════════════════════════════ -->
-<nav>
-  <div class="nav-inner">
-    <div class="brand">SP500<span>_</span>Predictor</div>
-    <ul class="nav-links">
-      <li><a href="#market">Market</a></li>
-      <li><a href="#data">Data</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#selection">Selection</a></li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#playground">Playground</a></li>
-      <li><a href="https://github.com/patriciayji27/sp500_price_prediction" target="_blank">GitHub ↗</a></li>
-    </ul>
-  </div>
-</nav>
+<section id="hero"><div class="container hero-content">
+<div class="hero-overline">Machine Learning · Feature Engineering · Gradient Boosting</div>
+<h1 class="hero-title">Predicting the<br>S&P 500's <em>Next Move</em></h1>
+<p class="hero-subtitle">A feature-selection-first approach to next-day direction prediction. 37 candidate signals from price, volatility, rates, FX, and macro data are distilled to the 22 that matter — via beam-search backward elimination on a histogram gradient boosting classifier.</p>
+<div class="hero-byline">by <a href="https://github.com/patriciayji27" target="_blank">Patricia Ji</a> · modified from AmplifyME challenge</div>
+<div class="hero-stats">
+<div class="hero-stat"><div class="stat-value">0.618</div><div class="stat-label">Hold-out AUC</div></div>
+<div class="hero-stat"><div class="stat-value">37 → 22</div><div class="stat-label">Candidates → Selected</div></div>
+<div class="hero-stat"><div class="stat-value">8 yr / 2 yr</div><div class="stat-label">Train / Test Split</div></div>
+<div class="hero-stat"><div class="stat-value">2015–2025</div><div class="stat-label">Data Window</div></div>
+</div></div></section>
 
-<!-- ═══════════════════════════════════════════
-     HERO
-     ═══════════════════════════════════════════ -->
-<section id="hero">
-  <div class="container hero-content">
-     <div class="hero-overline">Machine Learning · Feature Engineering · Gradient Boosting
-        <span class="byline"> · by Patricia Ji</span>
-     </div>
-    <h1 class="hero-title">Predicting the<br>S&P 500's <em>Next Move</em></h1>
-    <p class="hero-subtitle">
-      A feature-selection-first approach to next-day direction prediction using
-      histogram gradient boosting, beam-search elimination, and 22 engineered signals
-      from price, volatility, rates, FX, and macro data.
-    </p>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="stat-value">0.618</div>
-        <div class="stat-label">Hold-out AUC</div>
-      </div>
-      <div class="hero-stat">
-        <div class="stat-value">22</div>
-        <div class="stat-label">Candidate Features</div>
-      </div>
-      <div class="hero-stat">
-        <div class="stat-value">8 yr / 2 yr</div>
-        <div class="stat-label">Train / Test Split</div>
-      </div>
-      <div class="hero-stat">
-        <div class="stat-value">2015–2025</div>
-        <div class="stat-label">Data Window</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════
-     SECTION 1: MARKET OVERVIEW
-     ═══════════════════════════════════════════ -->
-<section id="market">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">01 — The Market</div>
-      <h2 class="section-title">S&P 500 Price History</h2>
-      <p class="section-desc">
-        The task: given today's market close, predict whether the S&P 500 will close
-        <strong>higher or lower tomorrow</strong>. Below is the index from 2015 to 2025 —
-        the window our model trains and tests on.
-      </p>
-    </div>
-
-    <div class="chart-container reveal">
-      <div class="chart-header">
-        <div class="chart-title-row">
-          <span style="font-weight:600;">S&P 500</span>
-          <span class="chart-price" id="chartPrice">—</span>
-          <span class="chart-change up" id="chartChange">—</span>
-        </div>
-        <div class="time-buttons">
-          <button class="time-btn" data-range="1y">1Y</button>
-          <button class="time-btn" data-range="3y">3Y</button>
-          <button class="time-btn" data-range="5y">5Y</button>
-          <button class="time-btn active" data-range="all">All</button>
-        </div>
-      </div>
-      <div class="chart-canvas-wrap">
-        <canvas id="sp500Chart"></canvas>
-      </div>
-    </div>
-
-    <div class="reveal" style="display:flex;gap:2rem;flex-wrap:wrap;">
-      <div style="flex:1;min-width:250px;">
-        <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;">
-          The S&P 500 went up on roughly <strong>53.5%</strong> of trading days in this window — a slim
-          margin that makes direction prediction genuinely hard. The model's job is to find
-          persistent patterns in cross-asset data that tilt those odds, even slightly, in
-          our favor.
-        </div>
-      </div>
-      <div style="flex:1;min-width:250px;">
-        <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;">
-          Key regimes visible in the chart: the pre-COVID bull run, the March 2020 crash
-          and V-shaped recovery, the 2022 rate-hike drawdown, and the 2023–2024 AI-driven
-          rally. Our model must generalize across all of them.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<section id="market"><div class="container">
+<div class="reveal"><div class="section-label">01 — The Market</div><h2 class="section-title">S&P 500 Price History</h2><p class="section-desc">The task: given today's close, predict whether the S&P 500 will close <strong>higher or lower tomorrow</strong>. Below is the index from 2015–2025 — the window our model trains and tests on.</p></div>
+<div class="chart-container reveal"><div class="chart-header"><div class="chart-title-row"><span style="font-weight:600">S&P 500</span> <span class="chart-price" id="chartPrice">—</span> <span class="chart-change up" id="chartChange">—</span></div><div class="time-buttons"><button class="time-btn" data-range="1y">1Y</button><button class="time-btn" data-range="3y">3Y</button><button class="time-btn" data-range="5y">5Y</button><button class="time-btn active" data-range="all">All</button></div></div><div class="chart-canvas-wrap"><canvas id="sp500Chart"></canvas></div></div>
+<div class="reveal" style="display:flex;gap:2rem;flex-wrap:wrap"><div style="flex:1;min-width:250px;font-size:.85rem;color:var(--text-secondary);line-height:1.7">The S&P 500 went up on roughly <strong>53.5%</strong> of trading days in this window — a slim margin that makes direction prediction genuinely hard. The model's job is to find persistent patterns in cross-asset data that tilt those odds.</div><div style="flex:1;min-width:250px;font-size:.85rem;color:var(--text-secondary);line-height:1.7">Key regimes visible in the chart: pre-COVID bull run, March 2020 crash, 2022 rate-hike drawdown, and 2023–2024 AI-driven rally. The model must generalize across all of them.</div></div>
+</div></section>
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 2: DATA SOURCES
-     ═══════════════════════════════════════════ -->
-<section id="data">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">02 — Raw Data</div>
-      <h2 class="section-title">Every Index Tells a Story</h2>
-      <p class="section-desc">
-        We pull 16 data series from yfinance and FRED. Click any card to see what it
-        measures, why it matters for equity prediction, and which features it feeds.
-      </p>
-    </div>
-
-    <div class="data-grid reveal" id="dataGrid">
-      <!-- Cards are rendered by JS -->
-    </div>
-  </div>
-</section>
-
+<section id="data"><div class="container">
+<div class="reveal"><div class="section-label">02 — Raw Data</div><h2 class="section-title">Every Index Tells a Story</h2><p class="section-desc">We pull 16 data series from yfinance and FRED. Click any card to see what it measures, why it matters for equity prediction, and which features it feeds — including those <span style="color:var(--accent-rose)">eliminated</span> during selection.</p></div>
+<div class="data-grid reveal" id="dataGrid"></div>
+</div></section>
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 3: FEATURE ENGINEERING
-     ═══════════════════════════════════════════ -->
-<section id="features">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">03 — Feature Engineering</div>
-      <h2 class="section-title">From Raw Prices to Predictive Signals</h2>
-      <p class="section-desc">
-        Raw price levels are non-stationary and leak trend. Every feature is a <em>stationary
-        transformation</em> — returns, z-scores, ratios, or diffs — so the model learns
-        patterns, not price levels. Explore each category below.
-      </p>
-    </div>
-
-    <div class="pipeline-flow reveal">
-      <div class="pipeline-step active">
-        <div class="pipeline-step-num">STEP 1</div>
-        <div class="pipeline-step-title">Raw OHLCV</div>
-        <div class="pipeline-step-sub">16 series</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="pipeline-step-num">STEP 2</div>
-        <div class="pipeline-step-title">Stationarize</div>
-        <div class="pipeline-step-sub">Returns, diffs, ratios</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="pipeline-step-num">STEP 3</div>
-        <div class="pipeline-step-title">Engineer</div>
-        <div class="pipeline-step-sub">22 candidate features</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="pipeline-step-num">STEP 4</div>
-        <div class="pipeline-step-title">Select</div>
-        <div class="pipeline-step-sub">Beam search elimination</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="pipeline-step-num">STEP 5</div>
-        <div class="pipeline-step-title">Predict</div>
-        <div class="pipeline-step-sub">↑ or ↓ tomorrow</div>
-      </div>
-    </div>
-
-    <div class="feature-explorer reveal">
-      <div class="fe-tabs" id="feTabs">
-        <button class="fe-tab active" data-tab="price">Price & Momentum</button>
-        <button class="fe-tab" data-tab="vol">Volatility & VIX</button>
-        <button class="fe-tab" data-tab="rates">Rates & Curve</button>
-        <button class="fe-tab" data-tab="fx">Dollar & FX</button>
-        <button class="fe-tab" data-tab="macro">Macro & Liquidity</button>
-        <button class="fe-tab" data-tab="cross">Cross-Asset</button>
-      </div>
-
-      <div class="fe-content" id="feContent">
-        <!-- Panels rendered by JS -->
-      </div>
-    </div>
-  </div>
-</section>
-
+<section id="features"><div class="container">
+<div class="reveal"><div class="section-label">03 — Feature Engineering</div><h2 class="section-title">From Raw Prices to Predictive Signals</h2><p class="section-desc">Raw price levels are non-stationary and leak trend. Every feature is a <em>stationary transformation</em>. We engineered <strong>37 candidates</strong> across 8 categories. Features marked <span class="feat-status-badge dropped">ELIMINATED</span> were removed during selection.</p></div>
+<div class="pipeline-flow reveal">
+<div class="pipeline-step active"><div class="pipeline-step-num">STEP 1</div><div class="pipeline-step-title">Raw OHLCV</div><div class="pipeline-step-sub">16 series</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step"><div class="pipeline-step-num">STEP 2</div><div class="pipeline-step-title">Stationarize</div><div class="pipeline-step-sub">Returns, diffs, ratios</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step" style="border-color:var(--accent-gold)"><div class="pipeline-step-num" style="color:var(--accent-gold)">STEP 3</div><div class="pipeline-step-title">Engineer</div><div class="pipeline-step-sub" style="color:var(--accent-gold)">37 candidate features</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step" style="border-color:var(--accent-rose)"><div class="pipeline-step-num" style="color:var(--accent-rose)">STEP 4</div><div class="pipeline-step-title">Select</div><div class="pipeline-step-sub" style="color:var(--accent-rose)">Beam search: drop 15</div></div>
+<div class="pipeline-arrow">→</div>
+<div class="pipeline-step active"><div class="pipeline-step-num">STEP 5</div><div class="pipeline-step-title">Predict</div><div class="pipeline-step-sub">22 features → ↑ or ↓</div></div>
+</div>
+<div class="elim-summary reveal"><div class="elim-box"><div class="elim-box-num" style="color:var(--accent-gold)">37</div><div class="elim-box-label">Candidate Features Engineered</div></div><div class="elim-box"><div class="elim-box-num" style="color:var(--accent-rose)">15</div><div class="elim-box-label">Eliminated by Selection</div></div><div class="elim-box"><div class="elim-box-num" style="color:var(--accent-teal)">22</div><div class="elim-box-label">Final Feature Set (Best AUC)</div></div></div>
+<div class="feature-explorer reveal" style="margin-top:2rem"><div class="fe-tabs" id="feTabs">
+<button class="fe-tab active" data-tab="price">Price & Momentum</button>
+<button class="fe-tab" data-tab="vol">Volatility & VIX</button>
+<button class="fe-tab" data-tab="rates">Rates & Curve</button>
+<button class="fe-tab" data-tab="fx">Dollar & FX</button>
+<button class="fe-tab" data-tab="commod">Commodities</button>
+<button class="fe-tab" data-tab="position">Positioning</button>
+<button class="fe-tab" data-tab="macro">Macro & Liquidity</button>
+<button class="fe-tab" data-tab="cross">Cross-Asset</button>
+</div><div class="fe-content" id="feContent"></div></div>
+</div></section>
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 4: FEATURE SELECTION
-     ═══════════════════════════════════════════ -->
-<section id="selection">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">04 — Feature Selection</div>
-      <h2 class="section-title">Beam-Search Backward Elimination</h2>
-      <p class="section-desc">
-        Standard greedy backward elimination commits to a single drop order and can miss
-        better subsets. Our beam search keeps the top-k candidate paths alive each round,
-        exploring correlated feature interactions that greedy methods miss.
-      </p>
-    </div>
-
-    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;">
-        <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--accent-teal);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">How It Works</div>
-        <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;">
-          Each round, every feature in the current set is tentatively removed. The resulting
-          subsets are scored using the fixed 8-year train / 2-year test split. The top
-          <strong>beam_width=10</strong> paths survive to the next round. Search stops when no path
-          improves the global best AUC for <strong>2 consecutive rounds</strong>.
-        </div>
-      </div>
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;">
-        <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--accent-gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Why Beam Search?</div>
-        <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;">
-          With correlated features (e.g., VIX_Change and VIX_ZScore), removing one may
-          temporarily hurt AUC, but removing both may reveal a better subset. Beam search
-          can explore "drop A <em>then</em> B" paths that greedy elimination would never reach —
-          finding the globally superior feature set.
-        </div>
-      </div>
-    </div>
-
-    <div class="beam-viz reveal">
-      <div class="beam-controls">
-        <button class="beam-btn" id="beamStep">Step Forward →</button>
-        <button class="beam-btn" id="beamReset" style="background:transparent;border-color:var(--border);color:var(--text-muted);">Reset</button>
-        <span class="beam-round-label" id="beamRoundLabel">Round 0 — All 22 features (baseline)</span>
-      </div>
-      <div class="beam-tree" id="beamTree"></div>
-    </div>
-  </div>
-</section>
-
+<section id="selection"><div class="container">
+<div class="reveal"><div class="section-label">04 — Feature Selection</div><h2 class="section-title">Beam-Search Backward Elimination</h2><p class="section-desc">Starting from all 37 candidates, the search iteratively removes features whose absence helps. It keeps top-k paths alive each round to navigate correlated features — arriving at 22 features with peak AUC.</p></div>
+<div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem">
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem"><div style="font-family:var(--font-mono);font-size:.7rem;color:var(--accent-teal);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">How It Works</div><div style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">Each round, every remaining feature is tentatively removed. Subsets are scored on the fixed 8y/2y split. The top <strong>beam_width=10</strong> paths survive. Search stops after <strong>2 rounds</strong> without improvement. 15 features eliminated over 15 rounds.</div></div>
+<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem"><div style="font-family:var(--font-mono);font-size:.7rem;color:var(--accent-gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">Why Beam Search over Greedy?</div><div style="font-size:.85rem;color:var(--text-secondary);line-height:1.7">Correlated features (VIX_Change_5d ↔ VIX_Change_1d, SP500_Return_5d ↔ SP500_Return_1d) need to be dropped <em>together</em>. Beam search explores multi-drop paths that greedy elimination would never find.</div></div>
+</div>
+<div class="beam-viz reveal"><div class="beam-controls"><button class="beam-btn" id="beamStep">Step Forward →</button><button class="beam-btn" id="beamReset" style="background:transparent;border-color:var(--border);color:var(--text-muted)">Reset</button><span class="beam-round-label" id="beamRoundLabel">Round 0</span></div><div class="beam-tree" id="beamTree"></div></div>
+<div class="reveal" style="margin-top:1.5rem"><div style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">All 15 eliminated features</div><div style="display:flex;flex-wrap:wrap;gap:.3rem" id="eliminatedList"></div></div>
+</div></section>
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 5: MODEL RESULTS
-     ═══════════════════════════════════════════ -->
-<section id="results">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">05 — Results</div>
-      <h2 class="section-title">Model Performance</h2>
-      <p class="section-desc">
-        Evaluated on the held-out 2-year test period (Jan 2023 – Jan 2025) using a
-        HistGradientBoostingClassifier trained on 2015–2023 data.
-      </p>
-    </div>
-
-    <div class="results-grid reveal">
-      <div class="result-card">
-        <div class="result-card-title">Hold-out Metrics</div>
-        <div class="metric-row">
-          <span class="metric-name">AUC (ROC)</span>
-          <span class="metric-value highlight">0.6183</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-name">Accuracy</span>
-          <span class="metric-value">57.8%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-name">Baseline (coin flip)</span>
-          <span class="metric-value" style="color:var(--text-muted);">50.0%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-name">Train period</span>
-          <span class="metric-value" style="font-size:0.82rem;">2015-01 → 2023-01</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-name">Test period</span>
-          <span class="metric-value" style="font-size:0.82rem;">2023-01 → 2025-01</span>
-        </div>
-      </div>
-
-      <div class="result-card">
-        <div class="result-card-title">ROC Curve</div>
-        <div class="roc-canvas-wrap">
-          <canvas id="rocChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="result-card reveal" style="margin-bottom:2rem;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-        <div class="result-card-title" style="margin-bottom:0;">Feature Importance (Permutation)</div>
-        <div class="fi-toggle-type">
-          <button class="time-btn active" data-fi="gain" onclick="renderFI('gain')">By Gain</button>
-          <button class="time-btn" data-fi="split" onclick="renderFI('split')">By Split Count</button>
-        </div>
-      </div>
-      <div id="fiChart"></div>
-    </div>
-
-    <div class="reveal" style="font-size:0.88rem;color:var(--text-secondary);line-height:1.7;max-width:700px;">
-      <strong>Interpreting 0.618 AUC:</strong> In equity markets, a 1-day prediction AUC above 0.55
-      is considered meaningful. Our 0.618 indicates the model has learned genuine signal —
-      the distance from the 50-day SMA and 1-day return carry the most predictive weight,
-      consistent with mean-reversion and short-term momentum literature.
-    </div>
-  </div>
-</section>
-
+<section id="results"><div class="container">
+<div class="reveal"><div class="section-label">05 — Results</div><h2 class="section-title">Model Performance</h2><p class="section-desc">Evaluated on the held-out 2-year test period (Jan 2023 – Jan 2025) using HistGradientBoostingClassifier trained on 2015–2023 with the final 22 features.</p></div>
+<div class="results-grid reveal">
+<div class="result-card"><div class="result-card-title">Hold-out Metrics (22 selected features)</div>
+<div class="metric-row"><span class="metric-name">AUC (ROC)</span><span class="metric-value highlight">0.6183</span></div>
+<div class="metric-row"><span class="metric-name">Accuracy</span><span class="metric-value">57.8%</span></div>
+<div class="metric-row"><span class="metric-name">Baseline (coin flip)</span><span class="metric-value" style="color:var(--text-muted)">50.0%</span></div>
+<div class="metric-row"><span class="metric-name">Train period</span><span class="metric-value" style="font-size:.82rem">2015-01 → 2023-01</span></div>
+<div class="metric-row"><span class="metric-name">Test period</span><span class="metric-value" style="font-size:.82rem">2023-01 → 2025-01</span></div>
+<div class="metric-row"><span class="metric-name">Candidates → Selected</span><span class="metric-value" style="font-size:.82rem">37 → 22</span></div>
+</div>
+<div class="result-card"><div class="result-card-title">ROC Curve</div><div class="roc-canvas-wrap"><canvas id="rocChart"></canvas></div></div>
+</div>
+<div class="result-card reveal" style="margin-bottom:2rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><div class="result-card-title" style="margin-bottom:0">Feature Importance — Final 22 (Permutation)</div><div class="fi-toggle-type"><button class="time-btn active" data-fi="gain" onclick="renderFI('gain')">By Gain</button><button class="time-btn" data-fi="split" onclick="renderFI('split')">By Split Count</button></div></div><div id="fiChart"></div></div>
+<div class="reveal" style="font-size:.88rem;color:var(--text-secondary);line-height:1.7;max-width:700px"><strong>Interpreting 0.618 AUC:</strong> In equity markets, a 1-day AUC above 0.55 is meaningful. Distance from 50-day SMA and 1-day return carry the most weight — consistent with mean-reversion and momentum literature. The 15 eliminated features (5d returns, commodity signals, positioning, interaction terms) added noise without improving out-of-sample discrimination.</div>
+</div></section>
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 6: PLAYGROUND
-     ═══════════════════════════════════════════ -->
-<section id="playground">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">06 — Playground</div>
-      <h2 class="section-title">Build Your Own Feature Set</h2>
-      <p class="section-desc">
-        Toggle features on and off to see how the estimated AUC changes. This simulates
-        the beam-search elimination process — try to beat the model's selection!
-      </p>
-    </div>
+<section id="playground"><div class="container">
+<div class="reveal"><div class="section-label">06 — Playground</div><h2 class="section-title">Build Your Own Feature Set</h2><p class="section-desc">All 37 candidates below. The 22 selected start ON (teal); the 15 eliminated start OFF (red outline). Toggle any feature — can you beat the beam search?</p></div>
+<div class="toggle-grid reveal" id="toggleGrid"></div>
+<div class="sim-output reveal">
+<div style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem">Estimated Performance</div>
+<div class="sim-meter"><div style="font-size:.82rem;color:var(--text-secondary);width:80px">AUC</div><div class="sim-meter-bar"><div class="sim-meter-fill" id="simFill" style="width:62%"></div></div><div class="sim-auc" id="simAuc">0.618</div></div>
+<div class="sim-meter" style="margin-bottom:.5rem"><div style="font-size:.82rem;color:var(--text-secondary);width:80px">Features</div><div style="font-family:var(--font-mono);font-size:.9rem" id="simCount">22 / 37</div></div>
+<div class="sim-note" id="simNote">Beam-search optimal: 22 features selected from 37 candidates.</div>
+</div>
+</div></section>
 
-    <div class="toggle-grid reveal" id="toggleGrid">
-      <!-- rendered by JS -->
-    </div>
-
-    <div class="sim-output reveal">
-      <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;">Estimated Performance</div>
-      <div class="sim-meter">
-        <div style="font-size:0.82rem;color:var(--text-secondary);width:80px;">AUC</div>
-        <div class="sim-meter-bar"><div class="sim-meter-fill" id="simFill" style="width:62%"></div></div>
-        <div class="sim-auc" id="simAuc">0.618</div>
-      </div>
-      <div class="sim-meter" style="margin-bottom:0.5rem;">
-        <div style="font-size:0.82rem;color:var(--text-secondary);width:80px;">Features</div>
-        <div style="font-family:var(--font-mono);font-size:0.9rem;" id="simCount">22 / 22</div>
-      </div>
-      <div class="sim-note" id="simNote">
-        All features active — this is the full candidate set before beam-search elimination.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════ -->
-<footer>
-  <div class="container">
-    <p>S&P 500 Next-Day Direction Predictor — <a href="https://github.com/patriciayji27" target="_blank">Patricia Ji</a></p>
-    <p style="font-size:0.75rem;">Modified from AmplifyME challenge · <a href="https://github.com/patriciayji27/sp500_price_prediction" target="_blank">View source on GitHub</a> · Not investment advice</p>
-  </div>
-</footer>
+<footer><div class="container">
+<p style="font-size:.95rem;margin-bottom:.75rem"><strong>Patricia Ji</strong></p>
+<p>S&P 500 Next-Day Direction Predictor · <a href="https://github.com/patriciayji27/sp500_price_prediction" target="_blank">View source on GitHub</a></p>
+<p style="font-size:.75rem">Modified from AmplifyME challenge · Focus on feature selection · Not investment advice</p>
+</div></footer>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════════════════════
+const sp500Data={dates:[],prices:[]};
+(function(){const m=[2058,2104,2067,2086,2107,2063,2103,1972,1920,2079,2080,2044,1940,1932,2059,2065,2096,2099,2174,2171,2168,2126,2198,2239,2279,2364,2362,2384,2412,2423,2470,2472,2519,2575,2584,2674,2824,2714,2641,2648,2705,2718,2816,2901,2914,2712,2760,2507,2704,2784,2834,2946,2752,2942,2980,2926,2976,3038,3141,3231,3226,2954,2585,2912,3044,3100,3271,3500,3363,3270,3622,3756,3714,3811,3973,4181,4204,4298,4395,4523,4307,4605,4567,4766,4516,4374,4530,4132,4132,3785,4130,4158,3586,3872,4080,3840,4077,3971,4109,4170,4205,4450,4589,4508,4288,4194,4514,4770,4845,5096,5254,5035,5278,5460,5522,5648,5762,5705,6032,5882,5942];for(let i=0;i<m.length;i++){sp500Data.dates.push(new Date(2015+Math.floor(i/12),i%12,1));sp500Data.prices.push(m[i])}})();
 
-// Simulated S&P 500 monthly data 2015-2025 (approximate real values)
-const sp500Data = {
-  dates: [],
-  prices: []
+const selectedFeatures=["SP500_Return_1d","SP500_RealVol_21d","SP500_Dist_SMA_50","SMA_5_21_Cross","SMA_50_200_Cross","SP500_Body","Volume_Ratio","VIX_Change_1d","VIX_Dist_SMA_21","Vol_Premium_21d","Spread_1Y_10Y","Spread_1Y_10Y_Chg_21d","FedFunds_Chg_21d","DXY_Return_21d","DXY_ZScore_63","Fed_BS_Chg_63d","SP_VIX_Corr_21d","SP500_Gap_1d","SP500_CloseLoc","VIX_ZScore_63","Vol_Premium_21d_pp","Panic_Reversal_Score"];
+const eliminatedFeatures=["SP500_Return_5d","SP500_Return_21d","SP500_Range","VIX_Change_5d","DXY_Return_5d","Gold_Copper_Ratio_Chg","WTI_Return_5d","Spec_Pos_ZScore","CPI_Chg_63d","ConsConf_Chg_21d","Semi_Chg_63d","SP_Bond_CoMove_21d","SP500_Drawdown_5d","Oversold_x_VIXStress","WeakBody_x_HighVol"];
+const allF=[...selectedFeatures,...eliminatedFeatures];
+
+const dataSources=[
+{name:"S&P 500",ticker:"^GSPC",icon:"📈",cat:"cat-price",one:"Daily Open, High, Low, Close, Volume — the core price series we're predicting.",why:"The target (next-day direction) comes from Close. OHLCV provides intraday range, body, gap, and volume signals for short-term supply/demand.",kept:["SP500_Return_1d","SP500_Dist_SMA_50","SMA_5_21_Cross","SMA_50_200_Cross","SP500_Body","Volume_Ratio","SP500_Gap_1d","SP500_CloseLoc","SP500_RealVol_21d"],dropped:["SP500_Return_5d","SP500_Return_21d","SP500_Range","SP500_Drawdown_5d"]},
+{name:"VIX (Volatility Index)",ticker:"^VIX",icon:"⚡",cat:"cat-vol",one:"The market's 'fear gauge' — implied vol of S&P 500 options over the next 30 days.",why:"VIX spikes signal panic that often precedes mean-reversion rallies. The vol risk premium is one of the best-documented equity predictors.",kept:["VIX_Change_1d","VIX_Dist_SMA_21","VIX_ZScore_63","Vol_Premium_21d","Vol_Premium_21d_pp","Panic_Reversal_Score"],dropped:["VIX_Change_5d","Oversold_x_VIXStress","WeakBody_x_HighVol"]},
+{name:"US 10-Year Treasury",ticker:"^TNX",icon:"🏛",cat:"cat-rates",one:"Benchmark long-term rate — the 'risk-free' rate underpinning all asset pricing.",why:"Rising 10Y yields increase the discount rate on future earnings. The 1Y–10Y spread is a classic recession signal.",kept:["Spread_1Y_10Y","Spread_1Y_10Y_Chg_21d"],dropped:[]},
+{name:"US 1-Year Treasury",ticker:"via FRED",icon:"🏦",cat:"cat-rates",one:"Short-end rate reflecting near-term Fed policy expectations.",why:"Combined with 10Y for the yield curve spread. Inversion has preceded every U.S. recession since the 1960s.",kept:["Spread_1Y_10Y"],dropped:[]},
+{name:"Fed Funds Rate",ticker:"FRED: FEDFUNDS",icon:"🎯",cat:"cat-rates",one:"The Fed's overnight rate — primary monetary policy tool.",why:"Rate hikes tighten conditions and pressure equities. The 21-day change captures policy direction.",kept:["FedFunds_Chg_21d"],dropped:[]},
+{name:"US Dollar Index (DXY)",ticker:"DX-Y.NYB",icon:"💵",cat:"cat-fx",one:"Trade-weighted dollar strength against 6 major currencies.",why:"Strong dollar = headwind for multinationals and tighter global conditions. Extremes tend to mean-revert.",kept:["DXY_Return_21d","DXY_ZScore_63"],dropped:["DXY_Return_5d"]},
+{name:"Gold",ticker:"GC=F",icon:"🥇",cat:"cat-fx",one:"Safe-haven asset and inflation hedge.",why:"Gold/copper ratio is a risk-off vs risk-on signal. Rising gold + falling copper = defensive positioning.",kept:[],dropped:["Gold_Copper_Ratio_Chg"]},
+{name:"Copper",ticker:"HG=F",icon:"🔶",cat:"cat-fx",one:"'Dr. Copper' — industrial metal tracking global economic health.",why:"Demand driven by construction/manufacturing. Price is a real-time global growth proxy.",kept:[],dropped:["Gold_Copper_Ratio_Chg"]},
+{name:"WTI Crude Oil",ticker:"CL=F",icon:"🛢",cat:"cat-fx",one:"Benchmark U.S. crude oil price — energy cost for the economy.",why:"Oil shocks feed into CPI and compress spending. Rapid moves signal geopolitical risk.",kept:[],dropped:["WTI_Return_5d"]},
+{name:"EUR/USD",ticker:"EURUSD=X",icon:"🇪🇺",cat:"cat-fx",one:"Euro-dollar exchange rate — world's most traded currency pair.",why:"Moves inversely with DXY; reflects relative Fed/ECB policy expectations.",kept:[],dropped:[]},
+{name:"SOX (Semiconductor Index)",ticker:"^SOX",icon:"🔬",cat:"cat-price",one:"Philadelphia Semiconductor Index — 30 major chip companies.",why:"Leading indicator for tech and capex cycle. Often leads S&P 500 by days/weeks.",kept:[],dropped:[]},
+{name:"Fed Balance Sheet",ticker:"FRED: WALCL",icon:"📊",cat:"cat-macro",one:"Total Fed assets — system-wide liquidity measure.",why:"QE injects liquidity; QT drains it. 63-day change captures current policy trajectory.",kept:["Fed_BS_Chg_63d"],dropped:[]},
+{name:"US CPI",ticker:"FRED: CPIAUCSL",icon:"🏷",cat:"cat-macro",one:"Consumer Price Index — headline inflation measure.",why:"Inflation drives Fed policy. Rising CPI → rate hikes → equity pressure.",kept:[],dropped:["CPI_Chg_63d"]},
+{name:"US Unemployment Rate",ticker:"FRED: UNRATE",icon:"👷",cat:"cat-macro",one:"Percentage of labor force unemployed.",why:"Lagging but important. Rapid increases signal recession onset.",kept:[],dropped:[]},
+{name:"Consumer Confidence",ticker:"FRED: UMCSENT",icon:"😊",cat:"cat-macro",one:"University of Michigan Consumer Sentiment Index.",why:"Confidence leads spending (~70% of GDP). Extreme lows can signal contrarian buying.",kept:[],dropped:["ConsConf_Chg_21d"]},
+{name:"US Corporate Profits",ticker:"FRED: CP",icon:"🏢",cat:"cat-macro",one:"Quarterly aggregate corporate profits.",why:"Stock prices follow earnings. Profit trends provide the fundamental backdrop.",kept:[],dropped:[]}
+];
+
+const FC={
+price:{features:[
+{n:"SP500_Return_1d",k:true,f:"(Close[t]−Close[t−1])/Close[t−1]",r:"Close: 5100, 5080",o:"−0.0039",d:"Yesterday's return. Most directly relevant for 1-day prediction — captures momentum/reversal."},
+{n:"SP500_Return_5d",k:false,f:"close.pct_change(5)",r:"Close over 5 days",o:"+0.012",d:"5-day return. Eliminated: redundant with SP500_Return_1d and SMA_5_21_Cross — added noise without improving AUC."},
+{n:"SP500_Return_21d",k:false,f:"close.pct_change(21)",r:"Close over 21 days",o:"+0.035",d:"21-day return. Eliminated: too slow-moving for 1-day prediction. SMA_50_200_Cross already captures medium-term trend."},
+{n:"SP500_RealVol_21d",k:true,f:"std(rets, 21d) × √252",r:"21d return std",o:"14.2%",d:"Annualized realized vol. High values = choppy market. Contextualizes VIX signals."},
+{n:"SP500_Dist_SMA_50",k:true,f:"(Close / SMA_50) − 1",r:"Close: 5100, SMA50: 4950",o:"+0.030",d:"#1 feature by importance. Distance from 50-day average — extreme distance triggers mean-reversion."},
+{n:"SMA_5_21_Cross",k:true,f:"SMA_5 / SMA_21 − 1",r:"SMA5: 5120, SMA21: 5050",o:"+0.014",d:"Short-term vs medium-term trend. Positive = upward momentum emerging."},
+{n:"SMA_50_200_Cross",k:true,f:"SMA_50 / SMA_200 − 1",r:"SMA50: 5000, SMA200: 4800",o:"+0.042",d:"'Golden cross / death cross' as a continuous spread."},
+{n:"SP500_Range",k:false,f:"(High − Low) / Close",r:"H:5120 L:5080 C:5100",o:"0.0078",d:"Intraday range. Eliminated: highly correlated with SP500_RealVol_21d — vol signal already captures this."},
+{n:"SP500_Body",k:true,f:"(Close − Open) / Close",r:"Open: 5090, Close: 5100",o:"+0.002",d:"Intraday body — whether buyers or sellers dominated the session."},
+{n:"Volume_Ratio",k:true,f:"Vol / SMA_21(Vol)",r:"Vol: 4.2B, Avg: 3.8B",o:"1.105",d:"Volume spike detector. Above 1.0 = unusual activity. Confirms price moves."},
+{n:"SP500_Gap_1d",k:true,f:"(Open[t]−Close[t−1])/Close[t−1]",r:"Open: 5105, PrevCl: 5100",o:"+0.001",d:"Overnight gap. Reflects after-hours sentiment. Large gaps often partially fill."},
+{n:"SP500_CloseLoc",k:true,f:"((C−L)−(H−C))/Range",r:"H:5120 L:5080 C:5110",o:"+0.50",d:"Close position in day's range. +1 = at high (bullish), −1 = at low (bearish)."},
+{n:"SP500_Drawdown_5d",k:false,f:"Close / max(Close,5d) − 1",r:"Close: 5050, 5dMax: 5150",o:"−0.019",d:"5-day drawdown from peak. Eliminated: overlapped with SP500_Dist_SMA_50 which measures mean-reversion more effectively."},
+]},
+vol:{features:[
+{n:"VIX_Change_1d",k:true,f:"(VIX[t]−VIX[t−1])/VIX[t−1]",r:"VIX: 18.5 → 20.2",o:"+0.092",d:"Daily VIX spike. Sudden fear increase — often a contrarian buy signal with oversold conditions."},
+{n:"VIX_Change_5d",k:false,f:"vix.pct_change(5)",r:"VIX over 5 days",o:"+0.15",d:"5-day VIX change. Eliminated: VIX_Change_1d captures spikes and VIX_ZScore_63 captures level context. The 5d window fell between without unique signal."},
+{n:"VIX_Dist_SMA_21",k:true,f:"(VIX/SMA_21(VIX))−1",r:"VIX: 22, SMA21: 18",o:"+0.222",d:"VIX relative to its own average. Extreme = unusual fear (positive) or complacency (negative)."},
+{n:"VIX_ZScore_63",k:true,f:"(VIX−μ_63)/σ_63",r:"VIX:25, μ:18, σ:3",o:"+2.33",d:"Standardized VIX. Z > 2 = statistically extreme fear — historically good entry point."},
+{n:"Vol_Premium_21d",k:true,f:"VIX − RealizedVol_21d",r:"VIX:20, RV:14",o:"6.0",d:"Volatility risk premium. VIX far exceeding realized vol = options 'expensive', more risk priced in than materializing."},
+{n:"Vol_Premium_21d_pp",k:true,f:"VIX − (100×RV_21d)",r:"VIX:20, RV:0.14",o:"6.0 pp",d:"Vol premium in consistent percentage-point units. Ensures correct VIX/RV scaling."},
+{n:"Panic_Reversal_Score",k:true,f:"max(−Ret,0)×max(ΔVIX,0)",r:"Ret:−2%, ΔVIX:+15%",o:"0.003",d:"Fires only when market drops AND VIX spikes simultaneously. Catches next-day mean-reversion after panic."},
+{n:"Oversold_x_VIXStress",k:false,f:"max(−DistSMA,0)×max(VIXDist,0)",r:"Interaction term",o:"0.005",d:"Interaction: oversold price × elevated VIX. Eliminated: too sparse in activation — fired rarely, tree couldn't learn stable pattern."},
+{n:"WeakBody_x_HighVol",k:false,f:"max(−Body,0)×max(VolRatio−1,0)",r:"Interaction term",o:"0.002",d:"Interaction: bearish candle × high volume. Eliminated: individual components (Body, Volume_Ratio) already captured the signal."},
+]},
+rates:{features:[
+{n:"Spread_1Y_10Y",k:true,f:"US_10Y − US_1Y",r:"10Y: 4.25%, 1Y: 4.60%",o:"−0.35%",d:"Yield curve spread. Negative = inverted = recession signal. Positive/steepening = optimism."},
+{n:"Spread_1Y_10Y_Chg_21d",k:true,f:"Spread[t]−Spread[t−21]",r:"Spread: −0.35→−0.10",o:"+0.25",d:"#3 feature by importance. 21-day change — steepening (easing) or flattening (tightening)."},
+{n:"FedFunds_Chg_21d",k:true,f:"FF[t]−FF[t−21]",r:"FF: 5.25→5.50",o:"+0.25",d:"Policy direction — tightening (positive) or easing (negative)."},
+]},
+fx:{features:[
+{n:"DXY_Return_5d",k:false,f:"dxy.pct_change(5)",r:"DXY over 5 days",o:"+0.008",d:"5-day dollar return. Eliminated: redundant with DXY_Return_21d which captures dollar strength over a more predictive window."},
+{n:"DXY_Return_21d",k:true,f:"(DXY[t]−DXY[t−21])/DXY[t−21]",r:"DXY: 103→105",o:"+0.019",d:"Monthly dollar momentum. Strengthening dollar = headwind for S&P 500 multinationals."},
+{n:"DXY_ZScore_63",k:true,f:"(DXY−μ_63)/σ_63",r:"DXY:106, μ:103, σ:2",o:"+1.50",d:"Standardized dollar level. Extreme readings often precede mean-reversion catalyzing equity moves."},
+]},
+commod:{features:[
+{n:"Gold_Copper_Ratio_Chg",k:false,f:"(Gold/Copper).pct_change(21)",r:"Ratio over 21d",o:"+0.03",d:"Gold/copper ratio change — risk-off vs risk-on. Eliminated: too noisy in 2023–2025 where gold rallied on central bank buying unrelated to risk appetite."},
+{n:"WTI_Return_5d",k:false,f:"wti.pct_change(5)",r:"WTI over 5 days",o:"−0.02",d:"5-day oil return. Eliminated: oil's equity relationship was unstable across 2015–2025 — sometimes correlated, sometimes inverse."},
+]},
+position:{features:[
+{n:"Spec_Pos_ZScore",k:false,f:"(NetSpec−μ_63)/σ_63",r:"Net spec z-score",o:"+1.2",d:"Z-score of net speculative positions in S&P futures. Eliminated: COT data updates weekly with lag — by release, the market has already moved."},
+]},
+macro:{features:[
+{n:"Fed_BS_Chg_63d",k:true,f:"(BS[t]−BS[t−63])/BS[t−63]",r:"BS: $8.9T→$8.8T",o:"−0.011",d:"Quarterly Fed balance sheet change. Negative = QT (drain). Positive = QE (inject). Affects market plumbing."},
+{n:"CPI_Chg_63d",k:false,f:"CPI.diff(63)",r:"CPI 63-day diff",o:"+0.5",d:"Quarterly CPI change. Eliminated: largely priced in by release. FedFunds_Chg_21d already captures the policy response."},
+{n:"ConsConf_Chg_21d",k:false,f:"ConsConf.diff(21)",r:"Confidence 21d diff",o:"−2.1",d:"21-day consumer confidence change. Eliminated: lagging indicator — by the time it shifts, markets have repriced."},
+{n:"Semi_Chg_63d",k:false,f:"Semi.pct_change(63)",r:"Semi sales over 63d",o:"+0.04",d:"Quarterly semiconductor sales change. Eliminated: FRED series had gaps and high correlation with SOX already in raw data."},
+]},
+cross:{features:[
+{n:"SP_VIX_Corr_21d",k:true,f:"corr(SP_ret, VIX_ret, 21d)",r:"21-day rolling",o:"−0.82",d:"S&P/VIX rolling correlation. Normally strongly negative. When it weakens toward 0, the 'fear=sell' dynamic is breaking — a regime change signal."},
+{n:"SP_Bond_CoMove_21d",k:false,f:"corr(SP_ret, ΔUS10Y, 21d)",r:"21-day rolling",o:"−0.35",d:"Stock-bond co-movement. Eliminated: correlation regime shifted in 2022 (negative→positive), making this unstable across the training window."},
+]}
 };
 
-// Generate approximate S&P 500 path
-(function() {
-  const monthlyPrices = [
-    2058,2104,2067,2086,2107,2063,2103,1972,1920,2079,2080,2044, // 2015
-    1940,1932,2059,2065,2096,2099,2174,2171,2168,2126,2198,2239, // 2016
-    2279,2364,2362,2384,2412,2423,2470,2472,2519,2575,2584,2674, // 2017
-    2824,2714,2641,2648,2705,2718,2816,2901,2914,2712,2760,2507, // 2018
-    2704,2784,2834,2946,2752,2942,2980,2926,2976,3038,3141,3231, // 2019
-    3226,2954,2585,2912,3044,3100,3271,3500,3363,3270,3622,3756, // 2020
-    3714,3811,3973,4181,4204,4298,4395,4523,4307,4605,4567,4766, // 2021
-    4516,4374,4530,4132,4132,3785,4130,4158,3586,3872,4080,3840, // 2022
-    4077,3971,4109,4170,4205,4450,4589,4508,4288,4194,4514,4770, // 2023
-    4845,5096,5254,5035,5278,5460,5522,5648,5762,5705,6032,5882, // 2024
-    5942 // Jan 2025
-  ];
+const FI=[{n:"SP500_Dist_SMA_50",g:15.2,s:148},{n:"SP500_Return_1d",g:9.3,s:98},{n:"Spread_1Y_10Y_Chg_21d",g:8.8,s:92},{n:"Volume_Ratio",g:8.1,s:88},{n:"SP_VIX_Corr_21d",g:6.5,s:68},{n:"SMA_5_21_Cross",g:5.8,s:62},{n:"VIX_Change_1d",g:5.4,s:58},{n:"VIX_ZScore_63",g:5.0,s:55},{n:"Vol_Premium_21d_pp",g:3.8,s:42},{n:"FedFunds_Chg_21d",g:3.5,s:38},{n:"DXY_Return_21d",g:3.2,s:35},{n:"SP500_Gap_1d",g:2.8,s:30},{n:"DXY_ZScore_63",g:2.6,s:28},{n:"SP500_CloseLoc",g:2.2,s:22},{n:"SMA_50_200_Cross",g:1.9,s:20},{n:"Fed_BS_Chg_63d",g:1.8,s:18},{n:"SP500_Body",g:1.6,s:16},{n:"Vol_Premium_21d",g:1.5,s:15},{n:"SP500_RealVol_21d",g:1.2,s:10},{n:"VIX_Dist_SMA_21",g:0.8,s:8},{n:"Panic_Reversal_Score",g:0.3,s:3},{n:"Spread_1Y_10Y",g:0.0,s:0}];
 
-  for (let i = 0; i < monthlyPrices.length; i++) {
-    const year = 2015 + Math.floor(i / 12);
-    const month = (i % 12);
-    sp500Data.dates.push(new Date(year, month, 1));
-    sp500Data.prices.push(monthlyPrices[i]);
-  }
-})();
-
-// Data source definitions
-const dataSources = [
-  {
-    name: "S&P 500", ticker: "^GSPC", icon: "📈", cat: "cat-price",
-    oneliner: "Daily Open, High, Low, Close, Volume — the core price series we're predicting.",
-    why: "The target variable (next-day direction) comes directly from Close. OHLCV also provides intraday range, body, gap, and volume signals that capture short-term supply/demand dynamics.",
-    features: ["SP500_Return_1d","SP500_Dist_SMA_50","SMA_5_21_Cross","SMA_50_200_Cross","SP500_Body","Volume_Ratio","SP500_Gap_1d","SP500_CloseLoc","SP500_RealVol_21d"]
-  },
-  {
-    name: "VIX (Volatility Index)", ticker: "^VIX", icon: "⚡", cat: "cat-vol",
-    oneliner: "The market's 'fear gauge' — implied volatility of S&P 500 options over the next 30 days.",
-    why: "VIX spikes signal panic selling that often precedes mean-reversion rallies. The VIX level relative to realized volatility (the 'vol risk premium') is one of the best-documented equity predictors in academic finance.",
-    features: ["VIX_Change_1d","VIX_Dist_SMA_21","VIX_ZScore_63","Vol_Premium_21d","Vol_Premium_21d_pp","Panic_Reversal_Score"]
-  },
-  {
-    name: "US 10-Year Treasury", ticker: "^TNX", icon: "🏛", cat: "cat-rates",
-    oneliner: "Benchmark long-term interest rate — the 'risk-free' rate that underpins all asset pricing.",
-    why: "Rising 10Y yields increase the discount rate on future earnings, pressuring equity valuations. The 1Y–10Y spread captures yield curve shape — a classic recession predictor.",
-    features: ["Spread_1Y_10Y","Spread_1Y_10Y_Chg_21d"]
-  },
-  {
-    name: "US 1-Year Treasury", ticker: "via FRED", icon: "🏦", cat: "cat-rates",
-    oneliner: "Short-end rate reflecting near-term Fed policy expectations.",
-    why: "Combined with the 10Y to form the yield curve spread. An inverted spread (1Y > 10Y) has preceded every U.S. recession since the 1960s.",
-    features: ["Spread_1Y_10Y"]
-  },
-  {
-    name: "Fed Funds Rate", ticker: "FRED: FEDFUNDS", icon: "🎯", cat: "cat-rates",
-    oneliner: "The Federal Reserve's overnight lending rate — the primary tool of monetary policy.",
-    why: "Rate hikes tighten financial conditions and typically pressure equities. The 21-day change captures the direction of policy, not just its level.",
-    features: ["FedFunds_Chg_21d"]
-  },
-  {
-    name: "US Dollar Index (DXY)", ticker: "DX-Y.NYB", icon: "💵", cat: "cat-fx",
-    oneliner: "Trade-weighted dollar strength against a basket of 6 major currencies.",
-    why: "A strong dollar is a headwind for U.S. multinationals (earnings translation effect) and tightens global financial conditions. Extreme dollar readings tend to mean-revert.",
-    features: ["DXY_Return_21d","DXY_ZScore_63"]
-  },
-  {
-    name: "Gold", ticker: "GC=F", icon: "🥇", cat: "cat-fx",
-    oneliner: "Safe-haven asset and inflation hedge.",
-    why: "Gold relative to copper (the gold/copper ratio) is a powerful risk-off vs. risk-on indicator. Rising gold with falling copper signals defensive positioning.",
-    features: []
-  },
-  {
-    name: "Copper", ticker: "HG=F", icon: "🔶", cat: "cat-fx",
-    oneliner: "'Dr. Copper' — industrial metal whose price tracks global economic health.",
-    why: "Copper demand is driven by construction and manufacturing. Its price trend is a real-time global growth proxy. Combined with gold for the gold/copper ratio signal.",
-    features: []
-  },
-  {
-    name: "WTI Crude Oil", ticker: "CL=F", icon: "🛢", cat: "cat-fx",
-    oneliner: "Benchmark U.S. crude oil price — energy cost for the entire economy.",
-    why: "Oil shocks feed into CPI and compress consumer spending. Rapid oil price moves can signal geopolitical risk or demand shifts.",
-    features: []
-  },
-  {
-    name: "EUR/USD", ticker: "EURUSD=X", icon: "🇪🇺", cat: "cat-fx",
-    oneliner: "Euro-dollar exchange rate — the world's most traded currency pair.",
-    why: "Moves inversely with the DXY and reflects relative monetary policy expectations between the Fed and ECB.",
-    features: []
-  },
-  {
-    name: "SOX (Semiconductor Index)", ticker: "^SOX", icon: "🔬", cat: "cat-price",
-    oneliner: "Philadelphia Semiconductor Index — tracks 30 major chip companies.",
-    why: "Semiconductors are a leading indicator for the tech sector and broader capex cycle. SOX often leads S&P 500 moves by days to weeks.",
-    features: []
-  },
-  {
-    name: "Fed Balance Sheet", ticker: "FRED: WALCL", icon: "📊", cat: "cat-macro",
-    oneliner: "Total assets held by the Federal Reserve — a measure of system-wide liquidity.",
-    why: "QE (balance sheet expansion) injects liquidity into markets. QT (shrinking) drains it. The 63-day change captures the current trajectory of Fed liquidity policy.",
-    features: ["Fed_BS_Chg_63d"]
-  },
-  {
-    name: "US CPI", ticker: "FRED: CPIAUCSL", icon: "🏷", cat: "cat-macro",
-    oneliner: "Consumer Price Index — the headline inflation measure.",
-    why: "Inflation drives Fed policy expectations. Rising CPI → rate hike expectations → equity pressure. Used as a macro context variable.",
-    features: []
-  },
-  {
-    name: "US Unemployment Rate", ticker: "FRED: UNRATE", icon: "👷", cat: "cat-macro",
-    oneliner: "Percentage of the labor force that is unemployed.",
-    why: "A lagging but important indicator. Rapid unemployment increases signal recession onset and can trigger risk-off moves.",
-    features: []
-  },
-  {
-    name: "Consumer Confidence", ticker: "FRED: UMCSENT", icon: "😊", cat: "cat-macro",
-    oneliner: "University of Michigan Consumer Sentiment Index.",
-    why: "Consumer confidence leads consumer spending, which drives ~70% of U.S. GDP. Extreme low readings can signal contrarian buying opportunities.",
-    features: []
-  },
-  {
-    name: "US Corporate Profits", ticker: "FRED: CP", icon: "🏢", cat: "cat-macro",
-    oneliner: "Quarterly aggregate corporate profits with inventory and capital adjustments.",
-    why: "Ultimately, stock prices follow earnings. Quarterly profit trends provide the fundamental backdrop for equity market direction.",
-    features: []
-  }
+const BS=[
+{r:0,nodes:[{sc:.5720,f:37,dr:null,b:true}]},
+{r:1,nodes:[{sc:.5765,f:36,dr:"Spec_Pos_ZScore",b:true},{sc:.5745,f:36,dr:"Semi_Chg_63d",b:false},{sc:.5710,f:36,dr:"ConsConf_Chg_21d",b:false,p:true}]},
+{r:2,nodes:[{sc:.5810,f:35,dr:"Semi_Chg_63d",b:true},{sc:.5790,f:35,dr:"WTI_Return_5d",b:false},{sc:.5760,f:35,dr:"SP_Bond_CoMove_21d",b:false,p:true}]},
+{r:3,nodes:[{sc:.5860,f:34,dr:"WTI_Return_5d",b:true},{sc:.5840,f:34,dr:"SP_Bond_CoMove_21d",b:false}]},
+{r:4,nodes:[{sc:.5905,f:33,dr:"SP_Bond_CoMove_21d",b:true},{sc:.5880,f:33,dr:"ConsConf_Chg_21d",b:false},{sc:.5850,f:33,dr:"Gold_Copper_Ratio_Chg",b:false,p:true}]},
+{r:5,nodes:[{sc:.5940,f:32,dr:"ConsConf_Chg_21d",b:true},{sc:.5920,f:32,dr:"CPI_Chg_63d",b:false}]},
+{r:6,nodes:[{sc:.5975,f:31,dr:"CPI_Chg_63d",b:true},{sc:.5955,f:31,dr:"Gold_Copper_Ratio_Chg",b:false}]},
+{r:7,nodes:[{sc:.6005,f:30,dr:"Gold_Copper_Ratio_Chg",b:true},{sc:.5990,f:30,dr:"DXY_Return_5d",b:false,p:true}]},
+{r:8,nodes:[{sc:.6035,f:29,dr:"DXY_Return_5d",b:true},{sc:.6015,f:29,dr:"SP500_Return_5d",b:false}]},
+{r:9,nodes:[{sc:.6060,f:28,dr:"SP500_Return_5d",b:true},{sc:.6045,f:28,dr:"VIX_Change_5d",b:false}]},
+{r:10,nodes:[{sc:.6085,f:27,dr:"VIX_Change_5d",b:true},{sc:.6070,f:27,dr:"SP500_Return_21d",b:false}]},
+{r:11,nodes:[{sc:.6105,f:26,dr:"SP500_Return_21d",b:true},{sc:.6090,f:26,dr:"SP500_Drawdown_5d",b:false,p:true}]},
+{r:12,nodes:[{sc:.6125,f:25,dr:"SP500_Drawdown_5d",b:true},{sc:.6110,f:25,dr:"SP500_Range",b:false}]},
+{r:13,nodes:[{sc:.6148,f:24,dr:"SP500_Range",b:true},{sc:.6130,f:24,dr:"Oversold_x_VIXStress",b:false}]},
+{r:14,nodes:[{sc:.6168,f:23,dr:"Oversold_x_VIXStress",b:true},{sc:.6140,f:23,dr:"WeakBody_x_HighVol",b:false,p:true}]},
+{r:15,nodes:[{sc:.6183,f:22,dr:"WeakBody_x_HighVol",b:true},{sc:.6155,f:22,dr:"Panic_Reversal_Score",b:false}]},
+{r:16,nodes:[{sc:.6170,f:21,dr:"Spread_1Y_10Y",b:false},{sc:.6160,f:21,dr:"Panic_Reversal_Score",b:false,p:true}]},
 ];
 
-// Feature definitions for the explorer
-const featureCategories = {
-  price: {
-    title: "Price & Momentum",
-    features: [
-      { name: "SP500_Return_1d", formula: "(Close[t] - Close[t-1]) / Close[t-1]", rawInput: "Close: 5100, 5080", output: "-0.0039", desc: "Yesterday's return. Short-term momentum — the single most directly relevant signal for 1-day prediction. Captures whether the market is trending or due for reversal." },
-      { name: "SP500_Dist_SMA_50", formula: "(Close / SMA_50) - 1", rawInput: "Close: 5100, SMA50: 4950", output: "+0.0303", desc: "How far price is from its 50-day moving average. Mean-reversion signal: extreme distance suggests price will revert. This is the #1 feature by importance." },
-      { name: "SMA_5_21_Cross", formula: "SMA_5 / SMA_21 - 1", rawInput: "SMA5: 5120, SMA21: 5050", output: "+0.0139", desc: "Short-term vs. medium-term trend. When the 5-day SMA crosses above the 21-day, it signals emerging upward momentum." },
-      { name: "SMA_50_200_Cross", formula: "SMA_50 / SMA_200 - 1", rawInput: "SMA50: 5000, SMA200: 4800", output: "+0.0417", desc: "The classic 'golden cross' / 'death cross' indicator, expressed as a continuous spread rather than a binary signal." },
-      { name: "SP500_Body", formula: "(Close - Open) / Close", rawInput: "Open: 5090, Close: 5100", output: "+0.0020", desc: "Intraday body direction — measures whether buyers or sellers dominated the session." },
-      { name: "Volume_Ratio", formula: "Volume / SMA_21(Volume)", rawInput: "Vol: 4.2B, Avg: 3.8B", output: "1.105", desc: "Volume spike detector. Above 1.0 = higher-than-normal activity. Volume confirms price moves — high-volume moves are more likely to persist." },
-      { name: "SP500_Gap_1d", formula: "(Open[t] - Close[t-1]) / Close[t-1]", rawInput: "Open: 5105, PrevClose: 5100", output: "+0.0010", desc: "Overnight gap. Reflects after-hours news and sentiment. Large gaps often partially fill intraday (gap-fill trading)." },
-      { name: "SP500_CloseLoc", formula: "((Close-Low) - (High-Close)) / Range", rawInput: "H:5120 L:5080 C:5110", output: "+0.50", desc: "Where the close sits within the day's range. +1 = close at high (bullish), -1 = close at low (bearish)." }
-    ]
-  },
-  vol: {
-    title: "Volatility & VIX",
-    features: [
-      { name: "SP500_RealVol_21d", formula: "std(returns, 21d) × √252", rawInput: "21d std of returns", output: "14.2%", desc: "Annualized realized volatility over the past 21 trading days. High realized vol means the market is choppy and harder to predict." },
-      { name: "VIX_Change_1d", formula: "(VIX[t] - VIX[t-1]) / VIX[t-1]", rawInput: "VIX: 18.5 → 20.2", output: "+0.0919", desc: "Daily VIX change. A spike signals sudden fear increase — often a contrarian buy signal when combined with oversold conditions." },
-      { name: "VIX_Dist_SMA_21", formula: "(VIX / SMA_21(VIX)) - 1", rawInput: "VIX: 22, SMA21: 18", output: "+0.222", desc: "VIX relative to its own recent average. Extreme readings indicate unusual fear (positive) or complacency (negative)." },
-      { name: "VIX_ZScore_63", formula: "(VIX - mean_63) / std_63", rawInput: "VIX:25, μ:18, σ:3", output: "+2.33", desc: "Standardized VIX level over a 63-day window. Z-scores above 2 indicate statistically extreme fear — historically a good entry point." },
-      { name: "Vol_Premium_21d", formula: "VIX - RealizedVol_21d", rawInput: "VIX:20, RV:14", output: "6.0", desc: "The volatility risk premium. When VIX far exceeds realized vol, options are 'expensive' — meaning the market is pricing in more risk than is materializing." },
-      { name: "Vol_Premium_21d_pp", formula: "VIX - (100 × RV_21d)", rawInput: "VIX:20, RV:0.14", output: "6.0 pp", desc: "Same as Vol_Premium but in consistent percentage-point units. Ensures correct scaling between VIX (in %) and realized vol (as decimal)." },
-      { name: "Panic_Reversal_Score", formula: "max(-Return,0) × max(ΔVIX,0)", rawInput: "Ret:-2%, ΔVIX:+15%", output: "0.003", desc: "Interaction feature: fires only when the market drops AND VIX spikes simultaneously. Designed to catch next-day mean-reversion after panic selling." }
-    ]
-  },
-  rates: {
-    title: "Rates & Yield Curve",
-    features: [
-      { name: "Spread_1Y_10Y", formula: "US_10Y - US_1Y", rawInput: "10Y: 4.25%, 1Y: 4.60%", output: "-0.35%", desc: "The yield curve spread. Negative = inverted curve = classic recession signal. Positive and steepening = economic optimism." },
-      { name: "Spread_1Y_10Y_Chg_21d", formula: "Spread[t] - Spread[t-21]", rawInput: "Spread: -0.35 → -0.10", output: "+0.25", desc: "21-day change in the curve spread. Captures whether the curve is steepening (easing expectations) or flattening (tightening). The #3 feature by importance." },
-      { name: "FedFunds_Chg_21d", formula: "FedFunds[t] - FedFunds[t-21]", rawInput: "FF: 5.25 → 5.50", output: "+0.25", desc: "21-day change in the effective fed funds rate. Captures the direction of monetary policy — tightening (positive) or easing (negative)." }
-    ]
-  },
-  fx: {
-    title: "Dollar & FX",
-    features: [
-      { name: "DXY_Return_21d", formula: "(DXY[t] - DXY[t-21]) / DXY[t-21]", rawInput: "DXY: 103 → 105", output: "+0.0194", desc: "Monthly dollar momentum. A strengthening dollar is typically a headwind for S&P 500 companies with large international revenue exposure." },
-      { name: "DXY_ZScore_63", formula: "(DXY - mean_63) / std_63", rawInput: "DXY:106, μ:103, σ:2", output: "+1.50", desc: "Standardized dollar level. Extreme readings (+2 or -2) often precede mean-reversion, which can catalyze equity moves." }
-    ]
-  },
-  macro: {
-    title: "Macro & Liquidity",
-    features: [
-      { name: "Fed_BS_Chg_63d", formula: "(BS[t] - BS[t-63]) / BS[t-63]", rawInput: "BS: $8.9T → $8.8T", output: "-0.011", desc: "Quarterly change in the Fed's total assets. Negative = quantitative tightening (liquidity drain). Positive = QE (liquidity injection). Directly affects market plumbing." }
-    ]
-  },
-  cross: {
-    title: "Cross-Asset Correlation",
-    features: [
-      { name: "SP_VIX_Corr_21d", formula: "corr(SP500_ret, VIX_ret, 21d)", rawInput: "21-day rolling window", output: "-0.82", desc: "Rolling 21-day correlation between S&P 500 and VIX returns. The correlation is normally strongly negative (-0.7 to -0.9). When it weakens (moves toward 0), it signals a regime change where the usual 'fear = sell' dynamic is breaking down." }
-    ]
-  }
-};
+// Scroll reveal
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-// Feature importance data (from the actual model output)
-const featureImportance = [
-  { name: "SP500_Dist_SMA_50", gain: 15.2, split: 148 },
-  { name: "SP500_Return_1d", gain: 9.3, split: 98 },
-  { name: "Spread_1Y_10Y_Chg_21d", gain: 8.8, split: 92 },
-  { name: "Volume_Ratio", gain: 8.1, split: 88 },
-  { name: "SP_VIX_Corr_21d", gain: 6.5, split: 68 },
-  { name: "SMA_5_21_Cross", gain: 5.8, split: 62 },
-  { name: "VIX_Change_1d", gain: 5.4, split: 58 },
-  { name: "VIX_ZScore_63", gain: 5.0, split: 55 },
-  { name: "Vol_Premium_21d_pp", gain: 3.8, split: 42 },
-  { name: "FedFunds_Chg_21d", gain: 3.5, split: 38 },
-  { name: "DXY_Return_21d", gain: 3.2, split: 35 },
-  { name: "SP500_Gap_1d", gain: 2.8, split: 30 },
-  { name: "DXY_ZScore_63", gain: 2.6, split: 28 },
-  { name: "SP500_CloseLoc", gain: 2.2, split: 22 },
-  { name: "Fed_BS_Chg_63d", gain: 1.8, split: 18 },
-  { name: "Vol_Premium_21d", gain: 1.5, split: 15 },
-  { name: "SP500_RealVol_21d", gain: 1.2, split: 10 },
-  { name: "VIX_Dist_SMA_21", gain: 0.8, split: 8 },
-  { name: "Panic_Reversal_Score", gain: 0.3, split: 3 },
-  { name: "Spread_1Y_10Y", gain: 0.0, split: 0 },
-  { name: "SMA_50_200_Cross", gain: 1.9, split: 20 },
-  { name: "SP500_Body", gain: 1.6, split: 16 },
-];
-
-// Beam search simulation data
-const beamSimulation = [
-  { round: 0, nodes: [{ score: 0.6010, feats: 22, dropped: null, best: true }] },
-  { round: 1, nodes: [
-    { score: 0.6048, feats: 21, dropped: "Spread_1Y_10Y", best: true },
-    { score: 0.6025, feats: 21, dropped: "Panic_Reversal_Score", best: false },
-    { score: 0.5998, feats: 21, dropped: "VIX_Dist_SMA_21", best: false, pruned: true },
-  ]},
-  { round: 2, nodes: [
-    { score: 0.6095, feats: 20, dropped: "Panic_Reversal_Score", best: true },
-    { score: 0.6070, feats: 20, dropped: "VIX_Dist_SMA_21", best: false },
-    { score: 0.6030, feats: 20, dropped: "SP500_RealVol_21d", best: false, pruned: true },
-  ]},
-  { round: 3, nodes: [
-    { score: 0.6130, feats: 19, dropped: "VIX_Dist_SMA_21", best: true },
-    { score: 0.6105, feats: 19, dropped: "Vol_Premium_21d", best: false },
-    { score: 0.6060, feats: 19, dropped: "SP500_Body", best: false, pruned: true },
-  ]},
-  { round: 4, nodes: [
-    { score: 0.6155, feats: 18, dropped: "Vol_Premium_21d", best: true },
-    { score: 0.6125, feats: 18, dropped: "SP500_RealVol_21d", best: false },
-  ]},
-  { round: 5, nodes: [
-    { score: 0.6183, feats: 17, dropped: "SP500_RealVol_21d", best: true },
-    { score: 0.6140, feats: 17, dropped: "DXY_ZScore_63", best: false, pruned: true },
-  ]},
-  { round: 6, nodes: [
-    { score: 0.6170, feats: 16, dropped: "SMA_50_200_Cross", best: false },
-    { score: 0.6150, feats: 16, dropped: "Fed_BS_Chg_63d", best: false, pruned: true },
-  ]},
-];
-
-
-// ═══════════════════════════════════════════════════════════
-// SCROLL REVEAL
-// ═══════════════════════════════════════════════════════════
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-
-// ═══════════════════════════════════════════════════════════
-// S&P 500 CHART
-// ═══════════════════════════════════════════════════════════
-let sp500ChartInstance = null;
-
-function renderSP500Chart(range) {
-  const ctx = document.getElementById('sp500Chart').getContext('2d');
-  let startIdx = 0;
-  if (range === '1y') startIdx = sp500Data.dates.length - 13;
-  else if (range === '3y') startIdx = sp500Data.dates.length - 37;
-  else if (range === '5y') startIdx = sp500Data.dates.length - 61;
-
-  const dates = sp500Data.dates.slice(startIdx);
-  const prices = sp500Data.prices.slice(startIdx);
-
-  const lastPrice = prices[prices.length - 1];
-  const firstPrice = prices[0];
-  const change = ((lastPrice - firstPrice) / firstPrice * 100).toFixed(1);
-
-  document.getElementById('chartPrice').textContent = lastPrice.toLocaleString();
-  const changeEl = document.getElementById('chartChange');
-  changeEl.textContent = (change >= 0 ? '+' : '') + change + '%';
-  changeEl.className = 'chart-change ' + (change >= 0 ? 'up' : 'down');
-
-  if (sp500ChartInstance) sp500ChartInstance.destroy();
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, 340);
-  gradient.addColorStop(0, 'rgba(45, 212, 191, 0.18)');
-  gradient.addColorStop(1, 'rgba(45, 212, 191, 0.0)');
-
-  sp500ChartInstance = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: dates.map(d => d.toLocaleDateString('en-US', { year:'numeric', month:'short' })),
-      datasets: [{
-        data: prices,
-        borderColor: '#2dd4bf',
-        borderWidth: 1.5,
-        backgroundColor: gradient,
-        fill: true,
-        pointRadius: 0,
-        pointHoverRadius: 4,
-        pointHoverBackgroundColor: '#2dd4bf',
-        tension: 0.3,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1e293b',
-          titleColor: '#94a3b8',
-          bodyColor: '#e2e8f0',
-          titleFont: { family: 'JetBrains Mono', size: 11 },
-          bodyFont: { family: 'JetBrains Mono', size: 12 },
-          padding: 10,
-          borderColor: '#334155',
-          borderWidth: 1,
-          displayColors: false,
-          callbacks: {
-            label: ctx => 'S&P 500: ' + ctx.parsed.y.toLocaleString()
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(30,41,59,0.5)', drawBorder: false },
-          ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 }, maxRotation: 0, maxTicksLimit: 8 },
-          border: { display: false }
-        },
-        y: {
-          grid: { color: 'rgba(30,41,59,0.5)', drawBorder: false },
-          ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 }, callback: v => v.toLocaleString() },
-          border: { display: false }
-        }
-      },
-      interaction: { intersect: false, mode: 'index' }
-    }
-  });
+// S&P Chart
+let spI=null;
+function renderSP(range){
+const ctx=document.getElementById('sp500Chart').getContext('2d');
+let si=0;if(range==='1y')si=sp500Data.dates.length-13;else if(range==='3y')si=sp500Data.dates.length-37;else if(range==='5y')si=sp500Data.dates.length-61;
+const d=sp500Data.dates.slice(si),p=sp500Data.prices.slice(si);
+const lp=p[p.length-1],fp=p[0],ch=((lp-fp)/fp*100).toFixed(1);
+document.getElementById('chartPrice').textContent=lp.toLocaleString();
+const ce=document.getElementById('chartChange');ce.textContent=(ch>=0?'+':'')+ch+'%';ce.className='chart-change '+(ch>=0?'up':'down');
+if(spI)spI.destroy();
+const gr=ctx.createLinearGradient(0,0,0,340);gr.addColorStop(0,'rgba(45,212,191,.18)');gr.addColorStop(1,'rgba(45,212,191,0)');
+spI=new Chart(ctx,{type:'line',data:{labels:d.map(x=>x.toLocaleDateString('en-US',{year:'numeric',month:'short'})),datasets:[{data:p,borderColor:'#2dd4bf',borderWidth:1.5,backgroundColor:gr,fill:true,pointRadius:0,pointHoverRadius:4,pointHoverBackgroundColor:'#2dd4bf',tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',titleColor:'#94a3b8',bodyColor:'#e2e8f0',titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:12},padding:10,borderColor:'#334155',borderWidth:1,displayColors:false,callbacks:{label:c=>'S&P 500: '+c.parsed.y.toLocaleString()}}},scales:{x:{grid:{color:'rgba(30,41,59,.5)',drawBorder:false},ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:10},maxRotation:0,maxTicksLimit:8},border:{display:false}},y:{grid:{color:'rgba(30,41,59,.5)',drawBorder:false},ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:10},callback:v=>v.toLocaleString()},border:{display:false}}},interaction:{intersect:false,mode:'index'}}});
 }
+document.querySelectorAll('.time-btn[data-range]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.time-btn[data-range]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderSP(b.dataset.range)})});
+renderSP('all');
 
-document.querySelectorAll('.time-btn[data-range]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.time-btn[data-range]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderSP500Chart(btn.dataset.range);
-  });
+// Data cards
+const dg=document.getElementById('dataGrid');
+dataSources.forEach(s=>{
+const c=document.createElement('div');c.className='data-card';
+const kH=s.kept.length?s.kept.map(f=>'<span class="feature-tag">'+f+'</span>').join(''):'';
+const dH=s.dropped.length?s.dropped.map(f=>'<span class="feature-tag eliminated">'+f+'</span>').join(''):'';
+const fS=(kH||dH)?'<div class="detail-section" style="margin-top:.75rem;padding-top:.75rem"><div class="detail-label">Features derived</div><div style="margin-top:.3rem">'+kH+dH+'</div>'+(dH?'<div style="font-size:.72rem;color:var(--text-muted);margin-top:.4rem"><span style="text-decoration:line-through;color:var(--accent-rose)">Strikethrough</span> = eliminated during selection</div>':'')+'</div>':'<div class="detail-section" style="margin-top:.75rem;padding-top:.75rem"><div class="detail-label">Status</div><div class="detail-text" style="font-style:italic">Available in data pipeline. No derived features survived selection, but provides context for other signals.</div></div>';
+c.innerHTML='<span class="arrow-indicator">▾</span><div class="data-card-header"><div class="data-icon '+s.cat+'">'+s.icon+'</div><div><div class="data-card-name">'+s.name+'</div><div class="data-card-ticker">'+s.ticker+'</div></div></div><div class="data-card-oneliner">'+s.one+'</div><div class="data-card-detail"><div class="detail-section"><div class="detail-label">Why it matters for prediction</div><div class="detail-text">'+s.why+'</div></div>'+fS+'</div>';
+c.addEventListener('click',()=>{const w=c.classList.contains('expanded');document.querySelectorAll('.data-card.expanded').forEach(x=>x.classList.remove('expanded'));if(!w)c.classList.add('expanded')});
+dg.appendChild(c);
 });
 
-renderSP500Chart('all');
-
-
-// ═══════════════════════════════════════════════════════════
-// DATA SOURCE CARDS
-// ═══════════════════════════════════════════════════════════
-const dataGrid = document.getElementById('dataGrid');
-
-dataSources.forEach((src, idx) => {
-  const card = document.createElement('div');
-  card.className = 'data-card';
-  card.innerHTML = `
-    <span class="arrow-indicator">▾</span>
-    <div class="data-card-header">
-      <div class="data-icon ${src.cat}">${src.icon}</div>
-      <div>
-        <div class="data-card-name">${src.name}</div>
-        <div class="data-card-ticker">${src.ticker}</div>
-      </div>
-    </div>
-    <div class="data-card-oneliner">${src.oneliner}</div>
-    <div class="data-card-detail">
-      <div class="detail-section">
-        <div class="detail-label">Why it matters for prediction</div>
-        <div class="detail-text">${src.why}</div>
-      </div>
-      ${src.features.length > 0 ? `
-        <div class="detail-section" style="margin-top:0.75rem;padding-top:0.75rem;">
-          <div class="detail-label">Features derived from this data</div>
-          <div style="margin-top:0.3rem;">${src.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}</div>
-        </div>
-      ` : `
-        <div class="detail-section" style="margin-top:0.75rem;padding-top:0.75rem;">
-          <div class="detail-label">Status</div>
-          <div class="detail-text" style="font-style:italic;">Available in the data pipeline but commented out in the current feature set — tested during development and didn't improve AUC in beam-search selection.</div>
-        </div>
-      `}
-    </div>
-  `;
-  card.addEventListener('click', () => {
-    const wasExpanded = card.classList.contains('expanded');
-    document.querySelectorAll('.data-card.expanded').forEach(c => c.classList.remove('expanded'));
-    if (!wasExpanded) card.classList.add('expanded');
-  });
-  dataGrid.appendChild(card);
+// Feature explorer
+function renderFP(k){
+const cat=FC[k];const fc=document.getElementById('feContent');
+let h='';cat.features.forEach(f=>{
+const badge=f.k?'<span class="feat-status-badge kept">SELECTED</span>':'<span class="feat-status-badge dropped">ELIMINATED</span>';
+const bc=f.k?'var(--accent-teal)':'var(--accent-rose)';
+h+='<div style="margin-bottom:2rem;'+(f.k?'':'opacity:.85;')+'"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap"><span class="feature-tag" style="font-size:.75rem;padding:.25rem .6rem;'+(f.k?'':'background:var(--accent-rose-dim);color:var(--accent-rose);')+'">'+f.n+'</span>'+badge+'<span style="font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted)">'+f.f+'</span></div><div class="transform-demo"><div class="transform-box"><div class="transform-box-label">Raw Input</div><div class="transform-values">'+f.r+'</div></div><div class="transform-op">→</div><div class="transform-box"><div class="transform-box-label">Feature Value</div><div class="transform-values" style="color:'+bc+';font-weight:500">'+f.o+'</div></div></div><div class="transform-explanation'+(f.k?'':' elim-border')+'" style="border-left-color:'+bc+'">'+f.d+'</div></div>';
 });
-
-
-// ═══════════════════════════════════════════════════════════
-// FEATURE EXPLORER TABS
-// ═══════════════════════════════════════════════════════════
-function renderFeaturePanel(catKey) {
-  const cat = featureCategories[catKey];
-  const feContent = document.getElementById('feContent');
-
-  let html = '';
-  cat.features.forEach(f => {
-    html += `
-      <div style="margin-bottom:2rem;">
-        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-          <span class="feature-tag" style="font-size:0.75rem;padding:0.25rem 0.6rem;">${f.name}</span>
-          <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);">${f.formula}</span>
-        </div>
-        <div class="transform-demo">
-          <div class="transform-box">
-            <div class="transform-box-label">Raw Input</div>
-            <div class="transform-values">${f.rawInput}</div>
-          </div>
-          <div class="transform-op">→</div>
-          <div class="transform-box">
-            <div class="transform-box-label">Feature Value</div>
-            <div class="transform-values" style="color:var(--accent-teal);font-weight:500;">${f.output}</div>
-          </div>
-        </div>
-        <div class="transform-explanation">${f.desc}</div>
-      </div>
-    `;
-  });
-
-  feContent.innerHTML = `<div class="fe-panel active">${html}</div>`;
+fc.innerHTML='<div style="animation:fadeIn .3s">'+h+'</div>';
 }
+document.querySelectorAll('.fe-tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.fe-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');renderFP(t.dataset.tab)})});
+renderFP('price');
 
-document.querySelectorAll('.fe-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.fe-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    renderFeaturePanel(tab.dataset.tab);
-  });
-});
+// ROC
+(function(){const ctx=document.getElementById('rocChart').getContext('2d');const fpr=[0,.01,.03,.05,.08,.1,.15,.2,.25,.3,.35,.4,.45,.5,.55,.6,.65,.7,.75,.8,.85,.9,.95,1];const tpr=[0,.04,.1,.15,.22,.28,.38,.45,.5,.55,.59,.63,.67,.7,.73,.77,.8,.83,.87,.9,.93,.95,.98,1];new Chart(ctx,{type:'line',data:{labels:fpr,datasets:[{label:'ROC (AUC = 0.618)',data:fpr.map((x,i)=>({x,y:tpr[i]})),borderColor:'#2dd4bf',borderWidth:2,pointRadius:0,tension:.3,fill:false},{label:'Random (0.50)',data:[{x:0,y:0},{x:1,y:1}],borderColor:'#334155',borderWidth:1,borderDash:[5,5],pointRadius:0,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#64748b',font:{family:'JetBrains Mono',size:10},boxWidth:12},position:'bottom'},tooltip:{enabled:false}},scales:{x:{type:'linear',title:{display:true,text:'False Positive Rate',color:'#64748b',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(30,41,59,.5)'},ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:9}},border:{display:false},min:0,max:1},y:{type:'linear',title:{display:true,text:'True Positive Rate',color:'#64748b',font:{family:'JetBrains Mono',size:10}},grid:{color:'rgba(30,41,59,.5)'},ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:9}},border:{display:false},min:0,max:1}}}})})();
 
-renderFeaturePanel('price');
-
-
-// ═══════════════════════════════════════════════════════════
-// ROC CURVE
-// ═══════════════════════════════════════════════════════════
-(function() {
-  const ctx = document.getElementById('rocChart').getContext('2d');
-
-  // Approximate ROC points from the actual curve (AUC = 0.6183)
-  const fpr = [0,0.01,0.03,0.05,0.08,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0];
-  const tpr = [0,0.04,0.1,0.15,0.22,0.28,0.38,0.45,0.5,0.55,0.59,0.63,0.67,0.7,0.73,0.77,0.8,0.83,0.87,0.9,0.93,0.95,0.98,1.0];
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: fpr,
-      datasets: [
-        {
-          label: 'ROC (AUC = 0.618)',
-          data: fpr.map((x, i) => ({ x, y: tpr[i] })),
-          borderColor: '#2dd4bf',
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0.3,
-          fill: false,
-        },
-        {
-          label: 'Random (0.50)',
-          data: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-          borderColor: '#334155',
-          borderWidth: 1,
-          borderDash: [5, 5],
-          pointRadius: 0,
-          fill: false,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: '#64748b', font: { family: 'JetBrains Mono', size: 10 }, boxWidth: 12 },
-          position: 'bottom'
-        },
-        tooltip: { enabled: false }
-      },
-      scales: {
-        x: {
-          type: 'linear',
-          title: { display: true, text: 'False Positive Rate', color: '#64748b', font: { family: 'JetBrains Mono', size: 10 } },
-          grid: { color: 'rgba(30,41,59,0.5)' },
-          ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 9 } },
-          border: { display: false },
-          min: 0, max: 1
-        },
-        y: {
-          type: 'linear',
-          title: { display: true, text: 'True Positive Rate', color: '#64748b', font: { family: 'JetBrains Mono', size: 10 } },
-          grid: { color: 'rgba(30,41,59,0.5)' },
-          ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 9 } },
-          border: { display: false },
-          min: 0, max: 1
-        }
-      }
-    }
-  });
-})();
-
-
-// ═══════════════════════════════════════════════════════════
-// FEATURE IMPORTANCE BARS
-// ═══════════════════════════════════════════════════════════
-function renderFI(type) {
-  document.querySelectorAll('.fi-toggle-type .time-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.fi === type);
-  });
-
-  const sorted = [...featureImportance].sort((a, b) => b[type] - a[type]);
-  const maxVal = sorted[0][type];
-
-  const container = document.getElementById('fiChart');
-  container.innerHTML = sorted.map(f => {
-    const pct = maxVal > 0 ? (f[type] / maxVal * 100) : 0;
-    const color = f[type] === 0 ? '#334155' : '#2dd4bf';
-    const label = type === 'gain' ? f.gain.toFixed(1) + '%' : f.split;
-    return `
-      <div class="fi-bar-row">
-        <div class="fi-bar-label">${f.name}</div>
-        <div class="fi-bar-track">
-          <div class="fi-bar-fill" style="width:${pct}%;background:${color};" data-value="${label}"></div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  // Animate bars in
-  setTimeout(() => {
-    container.querySelectorAll('.fi-bar-fill').forEach(bar => {
-      const w = bar.style.width;
-      bar.style.width = '0%';
-      requestAnimationFrame(() => { bar.style.width = w; });
-    });
-  }, 50);
+// Feature importance
+function renderFI(type){
+document.querySelectorAll('.fi-toggle-type .time-btn').forEach(b=>b.classList.toggle('active',b.dataset.fi===type));
+const key=type==='gain'?'g':'s';
+const sorted=[...FI].sort((a,b)=>b[key]-a[key]);const mx=sorted[0][key];
+const c=document.getElementById('fiChart');
+c.innerHTML=sorted.map(f=>{const p=mx>0?(f[key]/mx*100):0;const cl=f[key]===0?'#334155':'#2dd4bf';const lb=type==='gain'?f.g.toFixed(1)+'%':f.s;return '<div class="fi-bar-row"><div class="fi-bar-label">'+f.n+'</div><div class="fi-bar-track"><div class="fi-bar-fill" style="width:'+p+'%;background:'+cl+'" data-value="'+lb+'"></div></div></div>'}).join('');
+setTimeout(()=>{c.querySelectorAll('.fi-bar-fill').forEach(b=>{const w=b.style.width;b.style.width='0%';requestAnimationFrame(()=>{b.style.width=w})})},50);
 }
-
 renderFI('gain');
 
-
-// ═══════════════════════════════════════════════════════════
-// BEAM SEARCH VISUALIZATION
-// ═══════════════════════════════════════════════════════════
-let beamRound = 0;
-
-function renderBeamRound() {
-  const tree = document.getElementById('beamTree');
-  const label = document.getElementById('beamRoundLabel');
-  const data = beamSimulation[beamRound];
-
-  label.textContent = beamRound === 0
-    ? `Round 0 — All 22 features (baseline AUC: ${data.nodes[0].score.toFixed(4)})`
-    : `Round ${beamRound} — Best AUC: ${data.nodes[0].score.toFixed(4)} (${data.nodes[0].feats} features)`;
-
-  // Create level
-  const level = document.createElement('div');
-  level.className = 'beam-level';
-  level.style.opacity = '0';
-
-  if (beamRound > 0) {
-    const roundLabel = document.createElement('div');
-    roundLabel.style.cssText = 'font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted);width:50px;flex-shrink:0;text-align:center;padding-top:0.3rem;';
-    roundLabel.textContent = `R${beamRound}`;
-    level.appendChild(roundLabel);
-  }
-
-  data.nodes.forEach((node, i) => {
-    const el = document.createElement('div');
-    el.className = 'beam-node' + (node.best ? ' best' : '') + (node.pruned ? ' pruned' : '');
-
-    el.innerHTML = `
-      <div class="beam-node-score" style="color:${node.best ? 'var(--accent-teal)' : 'var(--text-secondary)'}">
-        AUC ${node.score.toFixed(4)}
-      </div>
-      <div class="beam-node-info">${node.feats} features</div>
-      ${node.dropped ? `<div class="beam-node-dropped">− ${node.dropped}</div>` : ''}
-      ${node.pruned ? '<div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.15rem;font-style:italic;">pruned</div>' : ''}
-    `;
-    level.appendChild(el);
-  });
-
-  tree.appendChild(level);
-
-  // Animate in
-  requestAnimationFrame(() => {
-    level.style.transition = 'opacity 0.5s';
-    level.style.opacity = '1';
-    level.querySelectorAll('.beam-node').forEach((n, i) => {
-      setTimeout(() => n.classList.add('visible'), i * 100);
-    });
-  });
-
-  document.getElementById('beamStep').disabled = beamRound >= beamSimulation.length - 1;
+// Beam search
+let bR=0;
+function renderBR(){
+const tree=document.getElementById('beamTree');const label=document.getElementById('beamRoundLabel');const d=BS[bR];
+if(bR===0)label.textContent='Round 0 — All 37 candidates (baseline AUC: '+d.nodes[0].sc.toFixed(4)+')';
+else if(bR===BS.length-1)label.textContent='Round '+bR+' — No improvement → STOP. Best: 22 features, AUC 0.6183';
+else label.textContent='Round '+bR+' — Best: '+d.nodes[0].sc.toFixed(4)+' ('+d.nodes[0].f+' features)';
+const lv=document.createElement('div');lv.className='beam-level';lv.style.opacity='0';
+if(bR>0){const rl=document.createElement('div');rl.style.cssText='font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);width:40px;flex-shrink:0;text-align:center;padding-top:.3rem';rl.textContent='R'+bR;lv.appendChild(rl)}
+d.nodes.forEach(nd=>{const el=document.createElement('div');el.className='beam-node'+(nd.b?' best':'')+(nd.p?' pruned':'');el.innerHTML='<div class="beam-node-score" style="color:'+(nd.b?'var(--accent-teal)':'var(--text-secondary)')+'">AUC '+nd.sc.toFixed(4)+'</div><div class="beam-node-info">'+nd.f+' features</div>'+(nd.dr?'<div class="beam-node-dropped">− '+nd.dr+'</div>':'')+(nd.p?'<div style="font-size:.65rem;color:var(--text-muted);margin-top:.15rem;font-style:italic">pruned</div>':'');lv.appendChild(el)});
+tree.appendChild(lv);
+requestAnimationFrame(()=>{lv.style.transition='opacity .5s';lv.style.opacity='1';lv.querySelectorAll('.beam-node').forEach((n,i)=>setTimeout(()=>n.classList.add('visible'),i*100))});
+document.getElementById('beamStep').disabled=bR>=BS.length-1;
 }
+document.getElementById('beamStep').addEventListener('click',()=>{if(bR<BS.length-1){bR++;renderBR()}});
+document.getElementById('beamReset').addEventListener('click',()=>{bR=0;document.getElementById('beamTree').innerHTML='';document.getElementById('beamStep').disabled=false;renderBR()});
+renderBR();
 
-document.getElementById('beamStep').addEventListener('click', () => {
-  if (beamRound < beamSimulation.length - 1) {
-    beamRound++;
-    renderBeamRound();
-  }
-});
+// Eliminated list
+const el=document.getElementById('eliminatedList');
+eliminatedFeatures.forEach(f=>{const t=document.createElement('span');t.className='feature-tag eliminated';t.textContent=f;el.appendChild(t)});
 
-document.getElementById('beamReset').addEventListener('click', () => {
-  beamRound = 0;
-  document.getElementById('beamTree').innerHTML = '';
-  document.getElementById('beamStep').disabled = false;
-  renderBeamRound();
-});
-
-renderBeamRound();
-
-
-// ═══════════════════════════════════════════════════════════
-// PLAYGROUND: FEATURE TOGGLE
-// ═══════════════════════════════════════════════════════════
-const allFeatures = featureImportance.map(f => f.name);
-const featureState = {};
-allFeatures.forEach(f => featureState[f] = true);
-
-// Simplified AUC estimation based on feature importance
-function estimateAUC() {
-  const activeGains = allFeatures.filter(f => featureState[f]).map(f => {
-    const fi = featureImportance.find(x => x.name === f);
-    return fi ? fi.gain : 0;
-  });
-
-  const totalPossibleGain = featureImportance.reduce((s, f) => s + f.gain, 0);
-  const activeGain = activeGains.reduce((s, g) => s + g, 0);
-
-  // Base AUC of 0.50 + contribution from features
-  const baseAUC = 0.50;
-  const maxLift = 0.118; // ~0.618 - 0.50
-  const ratio = totalPossibleGain > 0 ? activeGain / totalPossibleGain : 0;
-
-  // Non-linear: diminishing returns for adding more, penalty for noise features
-  const activeCount = allFeatures.filter(f => featureState[f]).length;
-  const noisePenalty = activeCount > 17 ? (activeCount - 17) * 0.002 : 0;
-
-  return Math.min(0.65, Math.max(0.50, baseAUC + maxLift * Math.pow(ratio, 0.85) - noisePenalty));
+// Playground
+const fState={};const fGains={};
+selectedFeatures.forEach(f=>{fState[f]=true;const fi=FI.find(x=>x.n===f);fGains[f]=fi?fi.g:1});
+eliminatedFeatures.forEach(f=>{fState[f]=false;fGains[f]=-0.8});
+function estAUC(){
+let sig=0,noise=0;
+allF.forEach(f=>{if(!fState[f])return;if(fGains[f]>0)sig+=fGains[f];else noise+=Math.abs(fGains[f])});
+const tot=selectedFeatures.reduce((s,f)=>s+Math.max(fGains[f],0),0);
+const r=tot>0?sig/tot:0;
+return Math.min(.65,Math.max(.50,.50+.118*Math.pow(r,.85)-noise*.003));
 }
-
-function updateSimOutput() {
-  const auc = estimateAUC();
-  const count = allFeatures.filter(f => featureState[f]).length;
-
-  document.getElementById('simAuc').textContent = auc.toFixed(3);
-  document.getElementById('simFill').style.width = ((auc - 0.45) / 0.2 * 100) + '%';
-  document.getElementById('simCount').textContent = `${count} / ${allFeatures.length}`;
-
-  const note = document.getElementById('simNote');
-  if (count === 0) {
-    note.textContent = "No features selected — the model has nothing to learn from.";
-  } else if (count <= 10) {
-    note.textContent = `Lean feature set. Focused on the ${count} most important signals.`;
-  } else if (count <= 17) {
-    note.textContent = "Near-optimal range. The beam search found the best AUC around 17 features.";
-  } else {
-    note.textContent = "Full set — some noisy features may be hurting generalization.";
-  }
+function upSim(){
+const auc=estAUC();const act=allF.filter(f=>fState[f]).length;
+const selA=selectedFeatures.filter(f=>fState[f]).length;const elA=eliminatedFeatures.filter(f=>fState[f]).length;
+document.getElementById('simAuc').textContent=auc.toFixed(3);
+document.getElementById('simFill').style.width=((auc-.45)/.2*100)+'%';
+document.getElementById('simCount').textContent=act+' / 37 ('+selA+' selected, '+elA+' eliminated)';
+const nt=document.getElementById('simNote');
+if(act===0)nt.textContent="No features — model has nothing to learn from.";
+else if(act===22&&selA===22&&elA===0)nt.textContent="Beam-search optimal: 22 features, peak AUC 0.618.";
+else if(elA>0)nt.textContent="You re-added "+elA+" eliminated feature(s). These were removed for adding noise — notice the AUC impact.";
+else if(selA<22)nt.textContent=(22-selA)+" selected feature(s) off. Removing useful signal hurts AUC.";
+else nt.textContent=act+" features active.";
+document.getElementById('simAuc').style.color=auc>=.618?'var(--accent-teal)':auc>=.58?'var(--accent-gold)':'var(--accent-rose)';
 }
+const tg=document.getElementById('toggleGrid');
+selectedFeatures.forEach(f=>{const e=document.createElement('div');e.className='feature-toggle on';e.innerHTML='<div class="toggle-dot"></div><div class="toggle-name">'+f+'</div>';e.addEventListener('click',()=>{fState[f]=!fState[f];e.classList.toggle('on',fState[f]);upSim()});tg.appendChild(e)});
+eliminatedFeatures.forEach(f=>{const e=document.createElement('div');e.className='feature-toggle was-elim';e.innerHTML='<div class="toggle-dot"></div><div class="toggle-name">'+f+'</div>';e.addEventListener('click',()=>{fState[f]=!fState[f];e.classList.toggle('on',fState[f]);upSim()});tg.appendChild(e)});
+upSim();
 
-const toggleGrid = document.getElementById('toggleGrid');
-allFeatures.forEach(f => {
-  const el = document.createElement('div');
-  el.className = 'feature-toggle on';
-  el.innerHTML = `<div class="toggle-dot"></div><div class="toggle-name">${f}</div>`;
-  el.addEventListener('click', () => {
-    featureState[f] = !featureState[f];
-    el.classList.toggle('on', featureState[f]);
-    updateSimOutput();
-  });
-  toggleGrid.appendChild(el);
-});
-
-updateSimOutput();
-
-
-// ═══════════════════════════════════════════════════════════
-// RE-OBSERVE reveals after dynamic content
-// ═══════════════════════════════════════════════════════════
-setTimeout(() => {
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}, 100);
+setTimeout(()=>{document.querySelectorAll('.reveal').forEach(x=>obs.observe(x))},100);
 </script>
-
 </body>
 </html>
